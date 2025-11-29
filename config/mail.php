@@ -3,8 +3,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require_once __DIR__ . "/vendor/autoload.php";
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 
 function sendEmail(
     string $subject,
@@ -14,17 +12,17 @@ function sendEmail(
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host = $_ENV["SMTP_HOST"];
+        $mail->Host = getenv("SMTP_HOST");
         $mail->SMTPAuth = true;
-        $mail->Username = $_ENV["SMTP_USER"];
-        $mail->Password = $_ENV["SMTP_PASS"];
+        $mail->Username = getenv("SMTP_USER");
+        $mail->Password = getenv("SMTP_PASS");
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = intval($_ENV["SMTP_PORT"]);
+        $mail->Port = intval(getenv("SMTP_PORT"));
         $mail->SMTPDebug = 2;
         $mail->Debugoutput = "error_log";
 
-        $mail->setFrom($_ENV["MAIL_FROM"], $_ENV["MAIL_FROM_NAME"]);
-        $mail->addAddress($_ENV["MAIL_TO"], $_ENV["MAIL_TO_NAME"]);
+        $mail->setFrom(getenv("MAIL_FROM"), getenv("MAIL_FROM_NAME"));
+        $mail->addAddress(getenv("MAIL_TO"), getenv("MAIL_TO_NAME"));
 
         $mail->isHTML(true);
         $mail->Subject = $subject;
