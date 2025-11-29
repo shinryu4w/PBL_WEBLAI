@@ -1,73 +1,91 @@
 <?php
 ob_start();
-$page_title = 'Kelola Berita & Agenda';
-include 'includes/auth.php';
-include 'includes/admin_header.php';
+$page_title = "Kelola Berita & Agenda";
+include __DIR__ . "/includes/auth.php";
+include __DIR__ . "/includes/admin_header.php";
 
-$success = '';
-$error = '';
+$success = "";
+$error = "";
 
 // DELETE single
-if (isset($_GET['delete'])) {
-    $uuid = $_GET['delete'];
+if (isset($_GET["delete"])) {
+    $uuid = $_GET["delete"];
     try {
         $stmt = $pdo->prepare("DELETE FROM berita WHERE uuid = ?");
         $stmt->execute([$uuid]);
-        $_SESSION['flash_success'] = 'Berita berhasil dihapus!';
+        $_SESSION["flash_success"] = "Berita berhasil dihapus!";
     } catch (PDOException $e) {
-        $_SESSION['flash_error'] = 'Gagal menghapus berita: ' . $e->getMessage();
+        $_SESSION["flash_error"] =
+            "Gagal menghapus berita: " . $e->getMessage();
     } finally {
         header("Location: manage_news.php");
-        exit;
+        exit();
     }
 }
 
 // INSERT / UPDATE
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['bulk_delete'])) {
-    $judul     = clean_input($_POST['judul'] ?? '');
-    $penulis   = clean_input($_POST['penulis'] ?? '');
-    $tanggal   = clean_input($_POST['tanggal'] ?? '');
-    $tempat    = clean_input($_POST['tempat'] ?? '');
-    $deskripsi = clean_input($_POST['deskripsi'] ?? '');
-    $kategori  = clean_input($_POST['kategori'] ?? '');
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST["bulk_delete"])) {
+    $judul = clean_input($_POST["judul"] ?? "");
+    $penulis = clean_input($_POST["penulis"] ?? "");
+    $tanggal = clean_input($_POST["tanggal"] ?? "");
+    $tempat = clean_input($_POST["tempat"] ?? "");
+    $deskripsi = clean_input($_POST["deskripsi"] ?? "");
+    $kategori = clean_input($_POST["kategori"] ?? "");
 
     try {
-        if (isset($_POST['uuid']) && !empty($_POST['uuid'])) {
-            $uuid = $_POST['uuid'];
+        if (isset($_POST["uuid"]) && !empty($_POST["uuid"])) {
+            $uuid = $_POST["uuid"];
             $stmt = $pdo->prepare(
-                "UPDATE berita SET judul = ?, penulis = ?, tanggal = ?, tempat = ?, deskripsi = ?, kategori = ?, updated_at = CURRENT_TIMESTAMP WHERE uuid = ?"
+                "UPDATE berita SET judul = ?, penulis = ?, tanggal = ?, tempat = ?, deskripsi = ?, kategori = ?, updated_at = CURRENT_TIMESTAMP WHERE uuid = ?",
             );
-            $stmt->execute([$judul, $penulis, $tanggal, $tempat, $deskripsi, $kategori, $uuid]);
-            $_SESSION['flash_success'] = 'Berita berhasil diupdate!';
+            $stmt->execute([
+                $judul,
+                $penulis,
+                $tanggal,
+                $tempat,
+                $deskripsi,
+                $kategori,
+                $uuid,
+            ]);
+            $_SESSION["flash_success"] = "Berita berhasil diupdate!";
         } else {
             $stmt = $pdo->prepare(
-                "INSERT INTO berita (judul, penulis, tanggal, tempat, deskripsi, kategori) VALUES (?, ?, ?, ?, ?, ?)"
+                "INSERT INTO berita (judul, penulis, tanggal, tempat, deskripsi, kategori) VALUES (?, ?, ?, ?, ?, ?)",
             );
-            $stmt->execute([$judul, $penulis, $tanggal, $tempat, $deskripsi, $kategori]);
-            $_SESSION['flash_success'] = 'Berita berhasil ditambahkan!';
+            $stmt->execute([
+                $judul,
+                $penulis,
+                $tanggal,
+                $tempat,
+                $deskripsi,
+                $kategori,
+            ]);
+            $_SESSION["flash_success"] = "Berita berhasil ditambahkan!";
         }
     } catch (PDOException $e) {
-        $_SESSION['flash_error'] = 'Terjadi kesalahan: ' . $e->getMessage();
+        $_SESSION["flash_error"] = "Terjadi kesalahan: " . $e->getMessage();
     } finally {
         header("Location: manage_news.php");
-        exit;
+        exit();
     }
 }
 
 // BULK DELETE
-if (isset($_POST['bulk_delete']) && !empty($_POST['selected'])) {
-    $uuids = $_POST['selected'];
+if (isset($_POST["bulk_delete"]) && !empty($_POST["selected"])) {
+    $uuids = $_POST["selected"];
     try {
-        $placeholders = implode(',', array_fill(0, count($uuids), '?'));
+        $placeholders = implode(",", array_fill(0, count($uuids), "?"));
         $query = "DELETE FROM berita WHERE uuid IN ($placeholders)";
         $stmt = $pdo->prepare($query);
         $stmt->execute($uuids);
-        $_SESSION['flash_success'] = count($uuids) . ' berita berhasil dihapus!';
+        $_SESSION["flash_success"] =
+            count($uuids) . " berita berhasil dihapus!";
     } catch (PDOException $e) {
-        $_SESSION['flash_error'] = 'Gagal menghapus beberapa berita: ' . $e->getMessage();
+        $_SESSION["flash_error"] =
+            "Gagal menghapus beberapa berita: " . $e->getMessage();
     } finally {
         header("Location: manage_news.php");
-        exit;
+        exit();
     }
 }
 
@@ -77,21 +95,21 @@ $news_list = $stmt->fetchAll();
 
 // Ambil data edit jika mode edit
 $edit_data = null;
-if (isset($_GET['edit'])) {
-    $uuid = $_GET['edit'];
+if (isset($_GET["edit"])) {
+    $uuid = $_GET["edit"];
     $stmt = $pdo->prepare("SELECT * FROM berita WHERE uuid = ?");
     $stmt->execute([$uuid]);
     $edit_data = $stmt->fetch();
 }
 
 // Ambil flash message jika ada
-if (isset($_SESSION['flash_success'])) {
-    $success = $_SESSION['flash_success'];
-    unset($_SESSION['flash_success']);
+if (isset($_SESSION["flash_success"])) {
+    $success = $_SESSION["flash_success"];
+    unset($_SESSION["flash_success"]);
 }
-if (isset($_SESSION['flash_error'])) {
-    $error = $_SESSION['flash_error'];
-    unset($_SESSION['flash_error']);
+if (isset($_SESSION["flash_error"])) {
+    $error = $_SESSION["flash_error"];
+    unset($_SESSION["flash_error"]);
 }
 ?>
 
@@ -99,14 +117,18 @@ if (isset($_SESSION['flash_error'])) {
 <div class="card mb-4 shadow-sm border-0 animate__animated animate__fadeInUp">
     <div class="card-header bg-white">
         <h5 class="mb-0 fw-bold">
-            <i class="bi bi-<?php echo $edit_data ? 'pencil' : 'plus'; ?>-circle me-2"></i>
-            <?php echo $edit_data ? 'Edit' : 'Tambah'; ?> Berita
+            <i class="bi bi-<?php echo $edit_data
+                ? "pencil"
+                : "plus"; ?>-circle me-2"></i>
+            <?php echo $edit_data ? "Edit" : "Tambah"; ?> Berita
         </h5>
     </div>
     <div class="card-body">
         <form method="POST" action="">
             <?php if ($edit_data): ?>
-                <input type="hidden" name="uuid" value="<?php echo $edit_data['uuid']; ?>">
+                <input type="hidden" name="uuid" value="<?php echo $edit_data[
+                    "uuid"
+                ]; ?>">
             <?php endif; ?>
 
             <div class="row">
@@ -115,7 +137,9 @@ if (isset($_SESSION['flash_error'])) {
                     <input type="text"
                         name="judul"
                         class="form-control"
-                        value="<?php echo $edit_data ? htmlspecialchars($edit_data['judul']) : ''; ?>"
+                        value="<?php echo $edit_data
+                            ? htmlspecialchars($edit_data["judul"])
+                            : ""; ?>"
                         placeholder="Contoh: Workshop AI 2024"
                         required>
                 </div>
@@ -125,7 +149,9 @@ if (isset($_SESSION['flash_error'])) {
                     <input type="text"
                         name="penulis"
                         class="form-control"
-                        value="<?php echo $edit_data ? htmlspecialchars($edit_data['penulis']) : ''; ?>"
+                        value="<?php echo $edit_data
+                            ? htmlspecialchars($edit_data["penulis"])
+                            : ""; ?>"
                         placeholder="Contoh: Najla Nuricia"
                         required>
                 </div>
@@ -134,9 +160,18 @@ if (isset($_SESSION['flash_error'])) {
                     <label class="form-label">Kategori <span class="text-danger">*</span></label>
                     <select name="kategori" class="form-select select-enhanced" required>
                         <option value="">Pilih Kategori</option>
-                        <option value="agenda" <?php echo ($edit_data && $edit_data['kategori'] == 'agenda') ? 'selected' : ''; ?>>Agenda</option>
-                        <option value="pengumuman" <?php echo ($edit_data && $edit_data['kategori'] == 'pengumuman') ? 'selected' : ''; ?>>Pengumuman</option>
-                        <option value="berita" <?php echo ($edit_data && $edit_data['kategori'] == 'berita') ? 'selected' : ''; ?>>Berita</option>
+                        <option value="agenda" <?php echo $edit_data &&
+                        $edit_data["kategori"] == "agenda"
+                            ? "selected"
+                            : ""; ?>>Agenda</option>
+                        <option value="pengumuman" <?php echo $edit_data &&
+                        $edit_data["kategori"] == "pengumuman"
+                            ? "selected"
+                            : ""; ?>>Pengumuman</option>
+                        <option value="berita" <?php echo $edit_data &&
+                        $edit_data["kategori"] == "berita"
+                            ? "selected"
+                            : ""; ?>>Berita</option>
                     </select>
                 </div>
 
@@ -145,7 +180,9 @@ if (isset($_SESSION['flash_error'])) {
                     <input type="date"
                         name="tanggal"
                         class="form-control"
-                        value="<?php echo $edit_data ? $edit_data['tanggal'] : date('Y-m-d'); ?>"
+                        value="<?php echo $edit_data
+                            ? $edit_data["tanggal"]
+                            : date("Y-m-d"); ?>"
                         required>
                 </div>
 
@@ -154,7 +191,9 @@ if (isset($_SESSION['flash_error'])) {
                     <input type="text"
                         name="tempat"
                         class="form-control"
-                        value="<?php echo $edit_data ? htmlspecialchars($edit_data['tempat']) : ''; ?>"
+                        value="<?php echo $edit_data
+                            ? htmlspecialchars($edit_data["tempat"])
+                            : ""; ?>"
                         placeholder="Lokasi acara">
                 </div>
 
@@ -164,7 +203,9 @@ if (isset($_SESSION['flash_error'])) {
                         class="form-control"
                         rows="3"
                         placeholder="Deskripsi singkat tentang album ini..."
-                        required><?php echo $edit_data ? htmlspecialchars($edit_data['deskripsi']) : ''; ?></textarea>
+                        required><?php echo $edit_data
+                            ? htmlspecialchars($edit_data["deskripsi"])
+                            : ""; ?></textarea>
                 </div>
             </div>
 
@@ -221,37 +262,66 @@ if (isset($_SESSION['flash_error'])) {
                             <?php foreach ($news_list as $index => $news): ?>
                                 <tr>
                                     <td>
-                                        <input type="checkbox" name="selected[]" value="<?= $news['uuid']; ?>" class="rowCheckbox">
+                                        <input type="checkbox" name="selected[]" value="<?= $news[
+                                            "uuid"
+                                        ] ?>" class="rowCheckbox">
                                     </td>
                                     <td><?php echo $index + 1; ?></td>
-                                    <td><?php echo date('d/m/Y', strtotime($news['tanggal'])); ?></td>
+                                    <td><?php echo date(
+                                        "d/m/Y",
+                                        strtotime($news["tanggal"]),
+                                    ); ?></td>
 
                                     <td>
-                                        <strong><?php echo htmlspecialchars($news['judul']); ?></strong><br>
+                                        <strong><?php echo htmlspecialchars(
+                                            $news["judul"],
+                                        ); ?></strong><br>
                                         <small class="text-muted">
-                                            <?php echo substr(htmlspecialchars($news['deskripsi']), 0, 80) . '...'; ?>
+                                            <?php echo substr(
+                                                htmlspecialchars(
+                                                    $news["deskripsi"],
+                                                ),
+                                                0,
+                                                80,
+                                            ) . "..."; ?>
                                         </small>
                                     </td>
 
-                                    <td><?php echo htmlspecialchars($news['penulis'] ?? ''); ?></td>
+                                    <td><?php echo htmlspecialchars(
+                                        $news["penulis"] ?? "",
+                                    ); ?></td>
 
 
                                     <td>
-                                        <span class="badge bg-<?php echo $news['kategori'] == 'agenda' ? 'success' : ($news['kategori'] == 'pengumuman' ? 'warning' : 'primary'); ?>">
-                                            <?php echo ucfirst($news['kategori']); ?>
+                                        <span class="badge bg-<?php echo $news[
+                                            "kategori"
+                                        ] == "agenda"
+                                            ? "success"
+                                            : ($news["kategori"] == "pengumuman"
+                                                ? "warning"
+                                                : "primary"); ?>">
+                                            <?php echo ucfirst(
+                                                $news["kategori"],
+                                            ); ?>
                                         </span>
                                     </td>
 
 
 
-                                    <td><?php echo htmlspecialchars($news['tempat']); ?></td>
+                                    <td><?php echo htmlspecialchars(
+                                        $news["tempat"],
+                                    ); ?></td>
                                     <td>
-                                        <a href="?edit=<?php echo $news['uuid']; ?>"
+                                        <a href="?edit=<?php echo $news[
+                                            "uuid"
+                                        ]; ?>"
                                             class="btn btn-sm btn-warning"
                                             title="Edit">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a href="?delete=<?php echo $news['uuid']; ?>"
+                                        <a href="?delete=<?php echo $news[
+                                            "uuid"
+                                        ]; ?>"
                                             class="btn btn-sm btn-danger"
                                             onclick="return confirmDelete('Apakah Anda yakin ingin menghapus berita ini?');"
                                             title="Hapus">
@@ -273,13 +343,13 @@ if (isset($_SESSION['flash_error'])) {
 </div>
 
 <?php
-include 'includes/admin_footer.php';
+include __DIR__ . "/includes/admin_footer.php";
 ob_end_flush();
 ?>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const successMessage = "<?= addslashes($success ?? '') ?>";
-        const errorMessage = "<?= addslashes($error ?? '') ?>";
+        const successMessage = "<?= addslashes($success ?? "") ?>";
+        const errorMessage = "<?= addslashes($error ?? "") ?>";
 
         if (successMessage) showSuccess(successMessage);
         if (errorMessage) showError(errorMessage);

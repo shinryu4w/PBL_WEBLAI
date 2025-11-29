@@ -1,52 +1,56 @@
 <?php
 ob_start();
-$page_title = 'Kelola Profile Laboratorium';
-include 'includes/auth.php';
-include 'includes/admin_header.php';
+$page_title = "Kelola Profile Laboratorium";
+include __DIR__ . "/includes/auth.php";
+include __DIR__ . "/includes/admin_header.php";
 
-$success = '';
-$error = '';
+$success = "";
+$error = "";
 
 // Get current profile
 $stmt = $pdo->query("SELECT * FROM profile LIMIT 1");
 $profile = $stmt->fetch();
 
 // Handle Update
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $visi = clean_input($_POST['visi']);
-    $misi = clean_input($_POST['misi']);
-    $sejarah = clean_input($_POST['sejarah']);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $visi = clean_input($_POST["visi"]);
+    $misi = clean_input($_POST["misi"]);
+    $sejarah = clean_input($_POST["sejarah"]);
 
     try {
         if ($profile) {
             // Update existing profile
-            $stmt = $pdo->prepare("UPDATE profile SET visi = ?, misi = ?, sejarah = ?, updated_at = CURRENT_TIMESTAMP WHERE uuid = ?");
-            $stmt->execute([$visi, $misi, $sejarah, $profile['uuid']]);
+            $stmt = $pdo->prepare(
+                "UPDATE profile SET visi = ?, misi = ?, sejarah = ?, updated_at = CURRENT_TIMESTAMP WHERE uuid = ?",
+            );
+            $stmt->execute([$visi, $misi, $sejarah, $profile["uuid"]]);
         } else {
             // Insert new profile
-            $stmt = $pdo->prepare("INSERT INTO profile (visi, misi, sejarah) VALUES (?, ?, ?)");
+            $stmt = $pdo->prepare(
+                "INSERT INTO profile (visi, misi, sejarah) VALUES (?, ?, ?)",
+            );
             $stmt->execute([$visi, $misi, $sejarah]);
         }
-        $_SESSION['flash_success'] = 'Profile laboratorium berhasil disimpan!';
+        $_SESSION["flash_success"] = "Profile laboratorium berhasil disimpan!";
 
         // Refresh data
         $stmt = $pdo->query("SELECT * FROM profile LIMIT 1");
         $profile = $stmt->fetch();
     } catch (PDOException $e) {
-        $_SESSION['flash_error'] = 'Terjadi kesalahan: ' . $e->getMessage();
+        $_SESSION["flash_error"] = "Terjadi kesalahan: " . $e->getMessage();
     } finally {
         header("Location: manage_profile.php");
-        exit;
+        exit();
     }
 }
 // Ambil flash message jika ada
-if (isset($_SESSION['flash_success'])) {
-    $success = $_SESSION['flash_success'];
-    unset($_SESSION['flash_success']);
+if (isset($_SESSION["flash_success"])) {
+    $success = $_SESSION["flash_success"];
+    unset($_SESSION["flash_success"]);
 }
-if (isset($_SESSION['flash_error'])) {
-    $error = $_SESSION['flash_error'];
-    unset($_SESSION['flash_error']);
+if (isset($_SESSION["flash_error"])) {
+    $error = $_SESSION["flash_error"];
+    unset($_SESSION["flash_error"]);
 }
 ?>
 
@@ -68,7 +72,9 @@ if (isset($_SESSION['flash_error'])) {
                             class="form-control"
                             rows="5"
                             required
-                            placeholder="Masukkan visi laboratorium..."><?php echo $profile ? htmlspecialchars($profile['visi']) : ''; ?></textarea>
+                            placeholder="Masukkan visi laboratorium..."><?php echo $profile
+                                ? htmlspecialchars($profile["visi"])
+                                : ""; ?></textarea>
                         <small class="text-muted">Visi laboratorium yang ingin dicapai</small>
                     </div>
 
@@ -80,7 +86,9 @@ if (isset($_SESSION['flash_error'])) {
                             class="form-control"
                             rows="8"
                             required
-                            placeholder="Masukkan misi laboratorium (pisahkan dengan enter untuk poin berbeda)..."><?php echo $profile ? htmlspecialchars($profile['misi']) : ''; ?></textarea>
+                            placeholder="Masukkan misi laboratorium (pisahkan dengan enter untuk poin berbeda)..."><?php echo $profile
+                                ? htmlspecialchars($profile["misi"])
+                                : ""; ?></textarea>
                         <small class="text-muted">Misi atau langkah-langkah untuk mencapai visi (gunakan enter untuk memisahkan setiap poin)</small>
                     </div>
 
@@ -92,7 +100,9 @@ if (isset($_SESSION['flash_error'])) {
                             class="form-control"
                             rows="10"
                             required
-                            placeholder="Masukkan sejarah pendirian dan perkembangan laboratorium..."><?php echo $profile ? htmlspecialchars($profile['sejarah']) : ''; ?></textarea>
+                            placeholder="Masukkan sejarah pendirian dan perkembangan laboratorium..."><?php echo $profile
+                                ? htmlspecialchars($profile["sejarah"])
+                                : ""; ?></textarea>
                         <small class="text-muted">Sejarah pendirian dan perkembangan laboratorium</small>
                     </div>
 
@@ -128,7 +138,9 @@ if (isset($_SESSION['flash_error'])) {
                                     <i class="bi bi-eye-fill me-2"></i>Visi
                                 </h6>
                                 <p class="text-muted text-center">
-                                    <?php echo nl2br(htmlspecialchars($profile['visi'])); ?>
+                                    <?php echo nl2br(
+                                        htmlspecialchars($profile["visi"]),
+                                    ); ?>
                                 </p>
                             </div>
                         </div>
@@ -138,17 +150,23 @@ if (isset($_SESSION['flash_error'])) {
                                 <h6 class="fw-bold text-primary mb-3">
                                     <i class="bi bi-bullseye me-2"></i>Misi
                                 </h6>
-                                <?php 
-                                $misi_items = preg_split('/\r\n|\r|\n/', trim($profile['misi']));
+                                <?php
+                                $misi_items = preg_split(
+                                    '/\r\n|\r|\n/',
+                                    trim($profile["misi"]),
+                                );
                                 foreach ($misi_items as $item) {
-                                if (trim($item) !== '') {
-                                    echo '
+                                    if (trim($item) !== "") {
+                                        echo '
                                     <li class="d-flex align-items-start">
                                         <i class="bi bi-check-circle-fill text-primary me-2 mt-1"></i>
-                                        <p class="text-muted">' . nl2br(htmlspecialchars($item)) . '</p>
+                                        <p class="text-muted">' .
+                                            nl2br(htmlspecialchars($item)) .
+                                            '</p>
                                     </li>';
+                                    }
                                 }
-                            }?>
+                                ?>
                             </div>
                         </div>
 
@@ -158,7 +176,9 @@ if (isset($_SESSION['flash_error'])) {
                                     <i class="bi bi-clock-history me-2"></i>Sejarah
                                 </h6>
                                 <p class="text-muted" style="text-align: justify;">
-                                    <?php echo nl2br(htmlspecialchars($profile['sejarah'])); ?>
+                                    <?php echo nl2br(
+                                        htmlspecialchars($profile["sejarah"]),
+                                    ); ?>
                                 </p>
                             </div>
                         </div>
@@ -169,11 +189,11 @@ if (isset($_SESSION['flash_error'])) {
     </div>
 <?php endif; ?>
 
-<?php include 'includes/admin_footer.php'; ?>
+<?php include __DIR__ . "/includes/admin_footer.php"; ?>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const successMessage = "<?= addslashes($success ?? '') ?>";
-        const errorMessage = "<?= addslashes($error ?? '') ?>";
+        const successMessage = "<?= addslashes($success ?? "") ?>";
+        const errorMessage = "<?= addslashes($error ?? "") ?>";
 
         if (successMessage) showSuccess(successMessage);
         if (errorMessage) showError(errorMessage);

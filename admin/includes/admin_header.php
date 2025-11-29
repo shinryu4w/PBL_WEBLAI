@@ -1,8 +1,8 @@
 <?php
-require_once '../config/db.php';
-require_once '../helpers/sanitize.php';
-require_once '../helpers/upload.php';
-require_once 'auth.php';
+require_once __DIR__ . "/../../config/db.php";
+require_once __DIR__ . "/../../helpers/sanitize.php";
+require_once __DIR__ . "/../../helpers/upload.php";
+require_once __DIR__ . "/auth.php";
 
 // Cek login dan session timeout
 require_login();
@@ -14,7 +14,9 @@ require_login();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo isset($page_title) ? $page_title . ' - ' : ''; ?>Admin Dashboard - AI Lab</title>
+    <title><?php echo isset($page_title)
+        ? $page_title . " - "
+        : ""; ?>Admin Dashboard - AI Lab</title>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -296,7 +298,11 @@ require_login();
 
         <ul class="sidebar-menu">
             <li>
-                <a href="dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''; ?>">
+                <a href="dashboard.php" class="<?php echo basename(
+                    $_SERVER["PHP_SELF"],
+                ) == "dashboard.php"
+                    ? "active"
+                    : ""; ?>">
                     <i class="bi bi-speedometer2"></i>
                     <span>Dashboard</span>
                 </a>
@@ -309,62 +315,98 @@ require_login();
             </li>
 
             <li>
-                <a href="manage_profile.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_profile.php' ? 'active' : ''; ?>">
+                <a href="manage_profile.php" class="<?php echo basename(
+                    $_SERVER["PHP_SELF"],
+                ) == "manage_profile.php"
+                    ? "active"
+                    : ""; ?>">
                     <i class="bi bi-building"></i>
                     <span>Profile Lab</span>
                 </a>
             </li>
 
             <li>
-                <a href="manage_dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_dashboard.php' ? 'active' : ''; ?>">
+                <a href="manage_dashboard.php" class="<?php echo basename(
+                    $_SERVER["PHP_SELF"],
+                ) == "manage_dashboard.php"
+                    ? "active"
+                    : ""; ?>">
                     <i class="bi bi-image"></i>
                     <span>Dashboard Background</span>
                 </a>
             </li>
 
             <li>
-                <a href="manage_news.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_news.php' ? 'active' : ''; ?>">
+                <a href="manage_news.php" class="<?php echo basename(
+                    $_SERVER["PHP_SELF"],
+                ) == "manage_news.php"
+                    ? "active"
+                    : ""; ?>">
                     <i class="bi bi-newspaper"></i>
                     <span>Berita & Agenda</span>
                 </a>
             </li>
 
             <li>
-                <a href="manage_activities.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_activities.php' ? 'active' : ''; ?>">
+                <a href="manage_activities.php" class="<?php echo basename(
+                    $_SERVER["PHP_SELF"],
+                ) == "manage_activities.php"
+                    ? "active"
+                    : ""; ?>">
                     <i class="bi bi-calendar-event"></i>
                     <span>Kegiatan</span>
                 </a>
             </li>
 
             <li>
-                <a href="manage_publications.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_publications.php' ? 'active' : ''; ?>">
+                <a href="manage_publications.php" class="<?php echo basename(
+                    $_SERVER["PHP_SELF"],
+                ) == "manage_publications.php"
+                    ? "active"
+                    : ""; ?>">
                     <i class="bi bi-journal-text"></i>
                     <span>Publikasi</span>
                 </a>
             </li>
 
             <li>
-                <a href="manage_products.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_products.php' ? 'active' : ''; ?>">
+                <a href="manage_products.php" class="<?php echo basename(
+                    $_SERVER["PHP_SELF"],
+                ) == "manage_products.php"
+                    ? "active"
+                    : ""; ?>">
                     <i class="bi bi-box-seam"></i>
                     <span>Produk</span>
                 </a>
             </li>
             <li>
-                <a href="manage_topik_riset.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_topik_riset.php' ? 'active' : ''; ?>">
+                <a href="manage_topik_riset.php" class="<?php echo basename(
+                    $_SERVER["PHP_SELF"],
+                ) == "manage_topik_riset.php"
+                    ? "active"
+                    : ""; ?>">
                     <i class="bi bi-lightbulb"></i>
                     <span>Topik Riset</span>
                 </a>
             </li>
 
             <li>
-                <a href="manage_blueprint.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_blueprint.php' ? 'active' : ''; ?>">
+                <a href="manage_blueprint.php" class="<?php echo basename(
+                    $_SERVER["PHP_SELF"],
+                ) == "manage_blueprint.php"
+                    ? "active"
+                    : ""; ?>">
                     <i class="bi bi-diagram-3"></i>
                     <span>Blueprint/Roadmap</span>
                 </a>
             </li>
 
             <li>
-                <a href="manage_gallery.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_gallery.php' ? 'active' : ''; ?>">
+                <a href="manage_gallery.php" class="<?php echo basename(
+                    $_SERVER["PHP_SELF"],
+                ) == "manage_gallery.php"
+                    ? "active"
+                    : ""; ?>">
                     <i class="bi bi-images"></i>
                     <span>Galeri</span>
                 </a>
@@ -377,21 +419,33 @@ require_login();
             </li>
 
             <li>
-                <a href="manage_members.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_members.php' ? 'active' : ''; ?>">
+                <a href="manage_members.php" class="<?php echo basename(
+                    $_SERVER["PHP_SELF"],
+                ) == "manage_members.php"
+                    ? "active"
+                    : ""; ?>">
                     <i class="bi bi-people"></i>
                     <span>Anggota Tim</span>
                 </a>
             </li>
 
             <li>
-                <a href="manage_partnerships.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_partnerships.php' ? 'active' : ''; ?>">
+                <a href="manage_partnerships.php" class="<?php echo basename(
+                    $_SERVER["PHP_SELF"],
+                ) == "manage_partnerships.php"
+                    ? "active"
+                    : ""; ?>">
                     <i class="fa-regular fa-handshake"></i>
                     <span>Partnership</span>
                 </a>
             </li>
 
             <li>
-                <a href="manage_facilities.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_facilities.php' ? 'active' : ''; ?>">
+                <a href="manage_facilities.php" class="<?php echo basename(
+                    $_SERVER["PHP_SELF"],
+                ) == "manage_facilities.php"
+                    ? "active"
+                    : ""; ?>">
                     <i class="bi bi-tools"></i>
                     <span>Fasilitas</span>
                 </a>
@@ -404,14 +458,22 @@ require_login();
             </li>
 
             <li>
-                <a href="manage_socmed.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_socmed.php' ? 'active' : ''; ?>">
+                <a href="manage_socmed.php" class="<?php echo basename(
+                    $_SERVER["PHP_SELF"],
+                ) == "manage_socmed.php"
+                    ? "active"
+                    : ""; ?>">
                     <i class="bi bi-share"></i>
                     <span>Social Media</span>
                 </a>
             </li>
 
             <li>
-                <a href="manage_users.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'manage_users.php' ? 'active' : ''; ?>">
+                <a href="manage_users.php" class="<?php echo basename(
+                    $_SERVER["PHP_SELF"],
+                ) == "manage_users.php"
+                    ? "active"
+                    : ""; ?>">
                     <i class="bi bi-person-gear"></i>
                     <span>Users</span>
                 </a>
@@ -427,7 +489,9 @@ require_login();
                 <button class="btn btn-link d-md-none" id="sidebarToggle">
                     <i class="bi bi-list fs-4"></i>
                 </button>
-                <h5 class="mb-0 d-inline-block"><?php echo isset($page_title) ? $page_title : 'Dashboard'; ?></h5>
+                <h5 class="mb-0 d-inline-block"><?php echo isset($page_title)
+                    ? $page_title
+                    : "Dashboard"; ?></h5>
             </div>
 
             <div class="d-flex align-items-center gap-3">
@@ -438,7 +502,7 @@ require_login();
                 <div class="dropdown">
                     <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
                         <i class="bi bi-person-circle me-1"></i>
-                        <?php echo htmlspecialchars($_SESSION['username']); ?>
+                        <?php echo htmlspecialchars($_SESSION["username"]); ?>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>

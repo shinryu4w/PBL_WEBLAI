@@ -1,82 +1,97 @@
 <?php
 ob_start();
-$page_title = 'Kelola Publikasi';
-include 'includes/auth.php';
-include 'includes/admin_header.php';
+$page_title = "Kelola Publikasi";
+include __DIR__ . "/includes/auth.php";
+include __DIR__ . "/includes/admin_header.php";
 
-$success = '';
-$error = '';
+$success = "";
+$error = "";
 
 // Handle Delete
-if (isset($_GET['delete'])) {
-    $uuid = $_GET['delete'];
+if (isset($_GET["delete"])) {
+    $uuid = $_GET["delete"];
     try {
         $stmt = $pdo->prepare("DELETE FROM publikasi WHERE uuid = ?");
         $stmt->execute([$uuid]);
-        $_SESSION['flash_success'] = 'Publikasi berhasil dihapus!';
+        $_SESSION["flash_success"] = "Publikasi berhasil dihapus!";
     } catch (PDOException $e) {
-        $_SESSION['flash_error'] = 'Gagal menghapus publikasi: ' . $e->getMessage();
+        $_SESSION["flash_error"] =
+            "Gagal menghapus publikasi: " . $e->getMessage();
     } finally {
         header("Location: manage_publications.php");
-        exit;
+        exit();
     }
 }
 
-if (isset($_POST['bulk_delete']) && !empty($_POST['selected'])) {
-    $uuids = $_POST['selected'];
+if (isset($_POST["bulk_delete"]) && !empty($_POST["selected"])) {
+    $uuids = $_POST["selected"];
 
     try {
         // Buat placeholder dinamis sebanyak jumlah UUID
-        $placeholders = implode(',', array_fill(0, count($uuids), '?'));
+        $placeholders = implode(",", array_fill(0, count($uuids), "?"));
         $query = "DELETE FROM publikasi WHERE uuid IN ($placeholders)";
         $stmt = $pdo->prepare($query);
 
         // Eksekusi semua UUID
         $stmt->execute($uuids);
 
-        $_SESSION['flash_success'] = count($uuids) . ' Publikasi berhasil dihapus!';
+        $_SESSION["flash_success"] =
+            count($uuids) . " Publikasi berhasil dihapus!";
     } catch (PDOException $e) {
-        $_SESSION['flash_error'] = 'Gagal menghapus publikasi: ' . $e->getMessage();
+        $_SESSION["flash_error"] =
+            "Gagal menghapus publikasi: " . $e->getMessage();
     } finally {
         header("Location: manage_publications.php");
-        exit;
+        exit();
     }
 }
 
 // Handle Insert/Update
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $judul = clean_input($_POST['judul'] ?? '');
-    $tahun = clean_input($_POST['tahun'] ?? '');
-    $penulis_id = !empty($_POST['penulis_id']) ? $_POST['penulis_id'] : null;
-    $tautan = clean_input($_POST['tautan'] ?? '');
-    $kategori = clean_input($_POST['kategori'] ?? '');
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $judul = clean_input($_POST["judul"] ?? "");
+    $tahun = clean_input($_POST["tahun"] ?? "");
+    $penulis_id = !empty($_POST["penulis_id"]) ? $_POST["penulis_id"] : null;
+    $tautan = clean_input($_POST["tautan"] ?? "");
+    $kategori = clean_input($_POST["kategori"] ?? "");
 
     try {
-        if (isset($_POST['uuid']) && !empty($_POST['uuid'])) {
+        if (isset($_POST["uuid"]) && !empty($_POST["uuid"])) {
             // Update
-            $uuid = $_POST['uuid'];
-            $stmt = $pdo->prepare("UPDATE publikasi SET judul = ?, tahun = ?, penulis_id = ?, tautan = ?, kategori = ?, updated_at = CURRENT_TIMESTAMP WHERE uuid = ?");
-            $stmt->execute([$judul, $tahun, $penulis_id, $tautan, $kategori, $uuid]);
-            $_SESSION['flash_success'] = 'Publikasi berhasil diperbarui!';
+            $uuid = $_POST["uuid"];
+            $stmt = $pdo->prepare(
+                "UPDATE publikasi SET judul = ?, tahun = ?, penulis_id = ?, tautan = ?, kategori = ?, updated_at = CURRENT_TIMESTAMP WHERE uuid = ?",
+            );
+            $stmt->execute([
+                $judul,
+                $tahun,
+                $penulis_id,
+                $tautan,
+                $kategori,
+                $uuid,
+            ]);
+            $_SESSION["flash_success"] = "Publikasi berhasil diperbarui!";
         } else {
             // Insert
-            $stmt = $pdo->prepare("INSERT INTO publikasi (judul, tahun, penulis_id, tautan, kategori) VALUES (?, ?, ?, ?, ?)");
+            $stmt = $pdo->prepare(
+                "INSERT INTO publikasi (judul, tahun, penulis_id, tautan, kategori) VALUES (?, ?, ?, ?, ?)",
+            );
             $stmt->execute([$judul, $tahun, $penulis_id, $tautan, $kategori]);
-            $_SESSION['flash_success'] = 'Publikasi berhasil ditambahkan!';
+            $_SESSION["flash_success"] = "Publikasi berhasil ditambahkan!";
         }
     } catch (PDOException $e) {
-        $_SESSION['flash_error'] = 'Gagal menyimpan publikasi: ' . $e->getMessage();
+        $_SESSION["flash_error"] =
+            "Gagal menyimpan publikasi: " . $e->getMessage();
     } finally {
         header("Location: manage_publications.php");
-        exit;
+        exit();
     }
 }
 
 // Get all publications with author info
 $stmt = $pdo->query("
-    SELECT p.*, a.nama as penulis_nama 
-    FROM publikasi p 
-    LEFT JOIN anggota a ON p.penulis_id = a.uuid 
+    SELECT p.*, a.nama as penulis_nama
+    FROM publikasi p
+    LEFT JOIN anggota a ON p.penulis_id = a.uuid
     ORDER BY p.tahun DESC, p.judul ASC
 ");
 $publications = $stmt->fetchAll();
@@ -87,35 +102,39 @@ $members = $stmt_members->fetchAll();
 
 // Get data for edit
 $edit_data = null;
-if (isset($_GET['edit'])) {
-    $uuid = $_GET['edit'];
+if (isset($_GET["edit"])) {
+    $uuid = $_GET["edit"];
     $stmt = $pdo->prepare("SELECT * FROM publikasi WHERE uuid = ?");
     $stmt->execute([$uuid]);
     $edit_data = $stmt->fetch();
 }
 
 // Ambil flash message jika ada
-if (isset($_SESSION['flash_success'])) {
-    $success = $_SESSION['flash_success'];
-    unset($_SESSION['flash_success']);
+if (isset($_SESSION["flash_success"])) {
+    $success = $_SESSION["flash_success"];
+    unset($_SESSION["flash_success"]);
 }
-if (isset($_SESSION['flash_error'])) {
-    $error = $_SESSION['flash_error'];
-    unset($_SESSION['flash_error']);
+if (isset($_SESSION["flash_error"])) {
+    $error = $_SESSION["flash_error"];
+    unset($_SESSION["flash_error"]);
 }
 ?>
 <!-- Form Tambah/Edit -->
 <div class="card mb-4 shadow-sm border-0 animate__animated animate__fadeInUp" style="animation-delay: 0s;">
     <div class="card-header bg-white">
         <h5 class="mb-0 fw-bold">
-            <i class="bi bi-<?php echo $edit_data ? 'pencil' : 'plus'; ?>-circle me-2"></i>
-            <?php echo $edit_data ? 'Edit' : 'Tambah'; ?> Publikasi
+            <i class="bi bi-<?php echo $edit_data
+                ? "pencil"
+                : "plus"; ?>-circle me-2"></i>
+            <?php echo $edit_data ? "Edit" : "Tambah"; ?> Publikasi
         </h5>
     </div>
     <div class="card-body">
         <form method="POST" action="">
             <?php if ($edit_data): ?>
-                <input type="hidden" name="uuid" value="<?php echo $edit_data['uuid']; ?>">
+                <input type="hidden" name="uuid" value="<?php echo $edit_data[
+                    "uuid"
+                ]; ?>">
             <?php endif; ?>
 
             <div class="row">
@@ -124,7 +143,9 @@ if (isset($_SESSION['flash_error'])) {
                     <input type="text"
                         name="judul"
                         class="form-control"
-                        value="<?php echo $edit_data ? htmlspecialchars($edit_data['judul']) : ''; ?>"
+                        value="<?php echo $edit_data
+                            ? htmlspecialchars($edit_data["judul"])
+                            : ""; ?>"
                         placeholder="Judul paper/publikasi"
                         required>
                 </div>
@@ -135,8 +156,10 @@ if (isset($_SESSION['flash_error'])) {
                         name="tahun"
                         class="form-control"
                         min="2000"
-                        max="<?php echo date('Y'); ?>"
-                        value="<?php echo $edit_data ? $edit_data['tahun'] : date('Y'); ?>"
+                        max="<?php echo date("Y"); ?>"
+                        value="<?php echo $edit_data
+                            ? $edit_data["tahun"]
+                            : date("Y"); ?>"
                         required>
                 </div>
 
@@ -145,9 +168,12 @@ if (isset($_SESSION['flash_error'])) {
                     <select name="penulis_id" class="form-select select-enhanced">
                         <option value="">Pilih Penulis</option>
                         <?php foreach ($members as $member): ?>
-                            <option value="<?php echo $member['uuid']; ?>"
-                                <?php echo ($edit_data && $edit_data['penulis_id'] == $member['uuid']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($member['nama']); ?>
+                            <option value="<?php echo $member["uuid"]; ?>"
+                                <?php echo $edit_data &&
+                                $edit_data["penulis_id"] == $member["uuid"]
+                                    ? "selected"
+                                    : ""; ?>>
+                                <?php echo htmlspecialchars($member["nama"]); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -159,7 +185,9 @@ if (isset($_SESSION['flash_error'])) {
                     <input type="text"
                         name="kategori"
                         class="form-control"
-                        value="<?php echo $edit_data ? htmlspecialchars($edit_data['kategori']) : ''; ?>"
+                        value="<?php echo $edit_data
+                            ? htmlspecialchars($edit_data["kategori"])
+                            : ""; ?>"
                         placeholder="Journal Paper, Conference Paper, Book Chapter"
                         required>
                 </div>
@@ -169,7 +197,9 @@ if (isset($_SESSION['flash_error'])) {
                     <input type="url"
                         name="tautan"
                         class="form-control"
-                        value="<?php echo $edit_data ? htmlspecialchars($edit_data['tautan']) : ''; ?>"
+                        value="<?php echo $edit_data
+                            ? htmlspecialchars($edit_data["tautan"])
+                            : ""; ?>"
                         placeholder="https://doi.org/... atau https://ieeexplore.ieee.org/...">
                     <small class="text-muted">Link ke paper/journal online (DOI, IEEE, ResearchGate, dll)</small>
                 </div>
@@ -226,15 +256,23 @@ if (isset($_SESSION['flash_error'])) {
                             <?php foreach ($publications as $index => $pub): ?>
                                 <tr>
                                     <td>
-                                        <input type="checkbox" name="selected[]" value="<?= $pub['uuid']; ?>" class="rowCheckbox">
+                                        <input type="checkbox" name="selected[]" value="<?= $pub[
+                                            "uuid"
+                                        ] ?>" class="rowCheckbox">
                                     </td>
                                     <td><?php echo $index + 1; ?></td>
-                                    <td><strong><?php echo $pub['tahun']; ?></strong></td>
+                                    <td><strong><?php echo $pub[
+                                        "tahun"
+                                    ]; ?></strong></td>
                                     <td>
-                                        <?php echo htmlspecialchars($pub['judul']); ?>
-                                        <?php if ($pub['tautan']): ?>
+                                        <?php echo htmlspecialchars(
+                                            $pub["judul"],
+                                        ); ?>
+                                        <?php if ($pub["tautan"]): ?>
                                             <br>
-                                            <a href="<?php echo htmlspecialchars($pub['tautan']); ?>"
+                                            <a href="<?php echo htmlspecialchars(
+                                                $pub["tautan"],
+                                            ); ?>"
                                                 target="_blank"
                                                 class="small text-primary">
                                                 <i class="bi bi-link-45deg"></i>View Paper
@@ -242,22 +280,30 @@ if (isset($_SESSION['flash_error'])) {
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <?php if ($pub['penulis_nama']): ?>
+                                        <?php if ($pub["penulis_nama"]): ?>
                                             <span class="badge bg-secondary">
-                                                <?php echo htmlspecialchars($pub['penulis_nama']); ?>
+                                                <?php echo htmlspecialchars(
+                                                    $pub["penulis_nama"],
+                                                ); ?>
                                             </span>
                                         <?php else: ?>
                                             <span class="text-muted small">-</span>
                                         <?php endif; ?>
                                     </td>
-                                    <td><?php echo htmlspecialchars($pub['kategori']); ?></td>
+                                    <td><?php echo htmlspecialchars(
+                                        $pub["kategori"],
+                                    ); ?></td>
                                     <td>
-                                        <a href="?edit=<?php echo $pub['uuid']; ?>"
+                                        <a href="?edit=<?php echo $pub[
+                                            "uuid"
+                                        ]; ?>"
                                             class="btn btn-sm btn-warning"
                                             title="Edit">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a href="?delete=<?php echo $pub['uuid']; ?>"
+                                        <a href="?delete=<?php echo $pub[
+                                            "uuid"
+                                        ]; ?>"
                                             class="btn btn-sm btn-danger"
                                             onclick="return confirmDelete();"
                                             title="Hapus">
@@ -279,11 +325,11 @@ if (isset($_SESSION['flash_error'])) {
     </div>
 </div>
 
-<?php include 'includes/admin_footer.php'; ?>
+<?php include __DIR__ . "/includes/admin_footer.php"; ?>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const successMessage = "<?= addslashes($success ?? '') ?>";
-        const errorMessage = "<?= addslashes($error ?? '') ?>";
+        const successMessage = "<?= addslashes($success ?? "") ?>";
+        const errorMessage = "<?= addslashes($error ?? "") ?>";
 
         if (successMessage) showSuccess(successMessage);
         if (errorMessage) showError(errorMessage);

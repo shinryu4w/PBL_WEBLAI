@@ -1,50 +1,56 @@
 <?php
 ob_start();
-$page_title = 'Kelola Social Media';
-include 'includes/auth.php';
-include 'includes/admin_header.php';
+$page_title = "Kelola Social Media";
+include __DIR__ . "/includes/auth.php";
+include __DIR__ . "/includes/admin_header.php";
 
-$success = '';
-$error = '';
+$success = "";
+$error = "";
 
 // Handle Delete
-if (isset($_GET['delete'])) {
-    $uuid = $_GET['delete'];
+if (isset($_GET["delete"])) {
+    $uuid = $_GET["delete"];
     try {
         $stmt = $pdo->prepare("DELETE FROM sosmed WHERE uuid = ?");
         $stmt->execute([$uuid]);
-        $_SESSION['flash_success'] = 'Social media berhasil dihapus!';
+        $_SESSION["flash_success"] = "Social media berhasil dihapus!";
     } catch (PDOException $e) {
-        $_SESSION['flash_error'] = 'Gagal menghapus social media: ' . $e->getMessage();
+        $_SESSION["flash_error"] =
+            "Gagal menghapus social media: " . $e->getMessage();
     } finally {
         header("Location: manage_socmed.php");
-        exit;
+        exit();
     }
 }
 
 // Handle Insert/Update
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $nama = strtolower(clean_input($_POST['nama']));
-    $url = clean_input($_POST['url']);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nama = strtolower(clean_input($_POST["nama"]));
+    $url = clean_input($_POST["url"]);
 
     try {
-        if (isset($_POST['uuid']) && !empty($_POST['uuid'])) {
+        if (isset($_POST["uuid"]) && !empty($_POST["uuid"])) {
             // Update
-            $uuid = $_POST['uuid'];
-            $stmt = $pdo->prepare("UPDATE sosmed SET nama = ?, url = ? WHERE uuid = ?");
+            $uuid = $_POST["uuid"];
+            $stmt = $pdo->prepare(
+                "UPDATE sosmed SET nama = ?, url = ? WHERE uuid = ?",
+            );
             $stmt->execute([$nama, $url, $uuid]);
-            $_SESSION['flash_success'] = 'Social media berhasil diperbarui!';
+            $_SESSION["flash_success"] = "Social media berhasil diperbarui!";
         } else {
             // Insert
-            $stmt = $pdo->prepare("INSERT INTO sosmed (nama, url) VALUES (?, ?)");
+            $stmt = $pdo->prepare(
+                "INSERT INTO sosmed (nama, url) VALUES (?, ?)",
+            );
             $stmt->execute([$nama, $url]);
-            $_SESSION['flash_success'] = 'Social media berhasil ditambahkan!';
+            $_SESSION["flash_success"] = "Social media berhasil ditambahkan!";
         }
     } catch (PDOException $e) {
-        $_SESSION['flash_error'] = 'Gagal menyimpan social media: ' . $e->getMessage();
+        $_SESSION["flash_error"] =
+            "Gagal menyimpan social media: " . $e->getMessage();
     } finally {
         header("Location: manage_socmed.php");
-        exit;
+        exit();
     }
 }
 
@@ -54,8 +60,8 @@ $social_media = $stmt->fetchAll();
 
 // Get data for edit
 $edit_data = null;
-if (isset($_GET['edit'])) {
-    $uuid = $_GET['edit'];
+if (isset($_GET["edit"])) {
+    $uuid = $_GET["edit"];
     $stmt = $pdo->prepare("SELECT * FROM sosmed WHERE uuid = ?");
     $stmt->execute([$uuid]);
     $edit_data = $stmt->fetch();
@@ -63,24 +69,24 @@ if (isset($_GET['edit'])) {
 
 // Social media platforms with icons
 $platforms = [
-    'facebook' => ['icon' => 'facebook', 'color' => 'primary'],
-    'instagram' => ['icon' => 'instagram', 'color' => 'danger'],
-    'twitter' => ['icon' => 'twitter', 'color' => 'info'],
-    'linkedin' => ['icon' => 'linkedin', 'color' => 'primary'],
-    'youtube' => ['icon' => 'youtube', 'color' => 'danger'],
-    'github' => ['icon' => 'github', 'color' => 'dark'],
-    'tiktok' => ['icon' => 'tiktok', 'color' => 'dark'],
-    'whatsapp' => ['icon' => 'whatsapp', 'color' => 'success'],
+    "facebook" => ["icon" => "facebook", "color" => "primary"],
+    "instagram" => ["icon" => "instagram", "color" => "danger"],
+    "twitter" => ["icon" => "twitter", "color" => "info"],
+    "linkedin" => ["icon" => "linkedin", "color" => "primary"],
+    "youtube" => ["icon" => "youtube", "color" => "danger"],
+    "github" => ["icon" => "github", "color" => "dark"],
+    "tiktok" => ["icon" => "tiktok", "color" => "dark"],
+    "whatsapp" => ["icon" => "whatsapp", "color" => "success"],
 ];
 
 // Ambil flash message jika ada
-if (isset($_SESSION['flash_success'])) {
-    $success = $_SESSION['flash_success'];
-    unset($_SESSION['flash_success']);
+if (isset($_SESSION["flash_success"])) {
+    $success = $_SESSION["flash_success"];
+    unset($_SESSION["flash_success"]);
 }
-if (isset($_SESSION['flash_error'])) {
-    $error = $_SESSION['flash_error'];
-    unset($_SESSION['flash_error']);
+if (isset($_SESSION["flash_error"])) {
+    $error = $_SESSION["flash_error"];
+    unset($_SESSION["flash_error"]);
 }
 ?>
 <div class="row">
@@ -88,14 +94,18 @@ if (isset($_SESSION['flash_error'])) {
         <div class="card">
             <div class="card-header bg-white">
                 <h5 class="mb-0 fw-bold">
-                    <i class="bi bi-<?php echo $edit_data ? 'pencil' : 'plus'; ?>-circle me-2"></i>
-                    <?php echo $edit_data ? 'Edit' : 'Tambah'; ?> Social Media
+                    <i class="bi bi-<?php echo $edit_data
+                        ? "pencil"
+                        : "plus"; ?>-circle me-2"></i>
+                    <?php echo $edit_data ? "Edit" : "Tambah"; ?> Social Media
                 </h5>
             </div>
             <div class="card-body">
                 <form method="POST" action="">
                     <?php if ($edit_data): ?>
-                        <input type="hidden" name="uuid" value="<?php echo $edit_data['uuid']; ?>">
+                        <input type="hidden" name="uuid" value="<?php echo $edit_data[
+                            "uuid"
+                        ]; ?>">
                     <?php endif; ?>
 
                     <div class="mb-3">
@@ -104,7 +114,10 @@ if (isset($_SESSION['flash_error'])) {
                             <option value="">Pilih Platform</option>
                             <?php foreach ($platforms as $key => $platform): ?>
                                 <option value="<?php echo $key; ?>"
-                                    <?php echo ($edit_data && $edit_data['nama'] == $key) ? 'selected' : ''; ?>>
+                                    <?php echo $edit_data &&
+                                    $edit_data["nama"] == $key
+                                        ? "selected"
+                                        : ""; ?>>
                                     <?php echo ucfirst($key); ?>
                                 </option>
                             <?php endforeach; ?>
@@ -116,7 +129,9 @@ if (isset($_SESSION['flash_error'])) {
                         <input type="url"
                             name="url"
                             class="form-control"
-                            value="<?php echo $edit_data ? htmlspecialchars($edit_data['url']) : ''; ?>"
+                            value="<?php echo $edit_data
+                                ? htmlspecialchars($edit_data["url"])
+                                : ""; ?>"
                             placeholder="https://..."
                             required>
                         <small class="text-muted">Link lengkap ke profile/halaman social media</small>
@@ -181,34 +196,51 @@ if (isset($_SESSION['flash_error'])) {
                 <?php if (!empty($social_media)): ?>
                     <div class="list-group">
                         <?php foreach ($social_media as $sosmed): ?>
-                            <?php
-                            $platform = $platforms[$sosmed['nama']] ?? ['icon' => 'link', 'color' => 'secondary'];
-                            ?>
+                            <?php $platform = $platforms[$sosmed["nama"]] ?? [
+                                "icon" => "link",
+                                "color" => "secondary",
+                            ]; ?>
                             <div class="list-group-item">
                                 <div class="d-flex align-items-center">
                                     <div class="flex-shrink-0 me-3">
-                                        <div class="bg-<?php echo $platform['color']; ?> bg-opacity-10 p-3 rounded">
-                                            <i class="bi bi-<?php echo $platform['icon']; ?> text-<?php echo $platform['color']; ?>"
+                                        <div class="bg-<?php echo $platform[
+                                            "color"
+                                        ]; ?> bg-opacity-10 p-3 rounded">
+                                            <i class="bi bi-<?php echo $platform[
+                                                "icon"
+                                            ]; ?> text-<?php echo $platform[
+     "color"
+ ]; ?>"
                                                 style="font-size: 2rem;"></i>
                                         </div>
                                     </div>
                                     <div class="flex-grow-1">
-                                        <h6 class="mb-1 fw-bold"><?php echo ucfirst($sosmed['nama']); ?></h6>
-                                        <a href="<?php echo htmlspecialchars($sosmed['url']); ?>"
+                                        <h6 class="mb-1 fw-bold"><?php echo ucfirst(
+                                            $sosmed["nama"],
+                                        ); ?></h6>
+                                        <a href="<?php echo htmlspecialchars(
+                                            $sosmed["url"],
+                                        ); ?>"
                                             target="_blank"
                                             class="small text-muted text-decoration-none">
                                             <i class="bi bi-link-45deg"></i>
-                                            <?php echo htmlspecialchars($sosmed['url']); ?>
+                                            <?php echo htmlspecialchars(
+                                                $sosmed["url"],
+                                            ); ?>
                                         </a>
                                     </div>
                                     <div class="flex-shrink-0">
                                         <div class="btn-group">
-                                            <a href="?edit=<?php echo $sosmed['uuid']; ?>"
+                                            <a href="?edit=<?php echo $sosmed[
+                                                "uuid"
+                                            ]; ?>"
                                                 class="btn btn-sm btn-warning"
                                                 title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <a href="?delete=<?php echo $sosmed['uuid']; ?>"
+                                            <a href="?delete=<?php echo $sosmed[
+                                                "uuid"
+                                            ]; ?>"
                                                 class="btn btn-sm btn-danger"
                                                 onclick="return confirmDelete();"
                                                 title="Hapus">
@@ -241,11 +273,20 @@ if (isset($_SESSION['flash_error'])) {
                     <p class="text-muted small mb-3">Ini adalah tampilan social media di footer website:</p>
                     <div class="d-flex flex-wrap gap-2">
                         <?php foreach ($social_media as $sosmed): ?>
-                            <?php $platform = $platforms[$sosmed['nama']] ?? ['icon' => 'link', 'color' => 'secondary']; ?>
-                            <a href="<?php echo htmlspecialchars($sosmed['url']); ?>"
+                            <?php $platform = $platforms[$sosmed["nama"]] ?? [
+                                "icon" => "link",
+                                "color" => "secondary",
+                            ]; ?>
+                            <a href="<?php echo htmlspecialchars(
+                                $sosmed["url"],
+                            ); ?>"
                                 target="_blank"
-                                class="btn btn-outline-<?php echo $platform['color']; ?> btn-sm">
-                                <i class="bi bi-<?php echo $platform['icon']; ?>"></i>
+                                class="btn btn-outline-<?php echo $platform[
+                                    "color"
+                                ]; ?> btn-sm">
+                                <i class="bi bi-<?php echo $platform[
+                                    "icon"
+                                ]; ?>"></i>
                             </a>
                         <?php endforeach; ?>
                     </div>
@@ -255,11 +296,11 @@ if (isset($_SESSION['flash_error'])) {
     </div>
 </div>
 
-<?php include 'includes/admin_footer.php'; ?>
+<?php include __DIR__ . "/includes/admin_footer.php"; ?>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const successMessage = "<?= addslashes($success ?? '') ?>";
-        const errorMessage = "<?= addslashes($error ?? '') ?>";
+        const successMessage = "<?= addslashes($success ?? "") ?>";
+        const errorMessage = "<?= addslashes($error ?? "") ?>";
 
         if (successMessage) showSuccess(successMessage);
         if (errorMessage) showError(errorMessage);

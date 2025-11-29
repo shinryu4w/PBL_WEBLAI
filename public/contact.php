@@ -2,64 +2,72 @@
 session_start();
 ob_start();
 
-require_once '../config/db.php';
-require_once '../helpers/sanitize.php';
-require '../config/mail.php';
+require_once __DIR__ . "/../config/db.php";
+require_once __DIR__ . "/../helpers/sanitize.php";
+require __DIR__ . "/../config/mail.php";
 
-$page_title = 'Contact Us';
+$page_title = "Contact Us";
 
-$success = '';
-$error = '';
+$success = "";
+$error = "";
 
-if (isset($_SESSION['flash_success'])) {
-    $success = $_SESSION['flash_success'];
-    unset($_SESSION['flash_success']);
+if (isset($_SESSION["flash_success"])) {
+    $success = $_SESSION["flash_success"];
+    unset($_SESSION["flash_success"]);
 }
-if (isset($_SESSION['flash_error'])) {
-    $error = $_SESSION['flash_error'];
-    unset($_SESSION['flash_error']);
+if (isset($_SESSION["flash_error"])) {
+    $error = $_SESSION["flash_error"];
+    unset($_SESSION["flash_error"]);
 }
 
 // Handle contact form submission
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $nama = clean_input($_POST['nama'] ?? '');
-    $email = clean_input($_POST['email'] ?? '');
-    $subjek = clean_input($_POST['subjek'] ?? '');
-    $pesan = clean_input($_POST['pesan'] ?? '');
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nama = clean_input($_POST["nama"] ?? "");
+    $email = clean_input($_POST["email"] ?? "");
+    $subjek = clean_input($_POST["subjek"] ?? "");
+    $pesan = clean_input($_POST["pesan"] ?? "");
 
     if (!$nama || !$email || !$subjek || !$pesan) {
-        $_SESSION['flash_error'] = 'Semua field harus diisi!';
+        $_SESSION["flash_error"] = "Semua field harus diisi!";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $_SESSION['flash_error'] = 'Format email tidak valid!';
+        $_SESSION["flash_error"] = "Format email tidak valid!";
     } else {
-        $bodyHtml  = '<div style="font-family:Arial,sans-serif;color:#333;font-size:16px;line-height:1.5;">'
-            . '<p style="margin:0 0 12px;"><strong>Nama:</strong> ' . htmlspecialchars($nama) . '</p>'
-            . '<p style="margin:0 0 12px;"><strong>Email:</strong> ' . htmlspecialchars($email) . '</p>'
-            . '<hr style="border:none;border-top:1px solid #eee;margin:20px 0;">'
-            . '<p style="margin:0 0 8px;"><strong>Pesan Anda:</strong></p>'
-            . '<p style="margin:0 0 12px;padding:12px;background:#f9f9f9;border:1px solid #eee;">'
-            . nl2br(htmlspecialchars($pesan))
-            . '</p>'
-            . '</div>';
+        $bodyHtml =
+            '<div style="font-family:Arial,sans-serif;color:#333;font-size:16px;line-height:1.5;">' .
+            '<p style="margin:0 0 12px;"><strong>Nama:</strong> ' .
+            htmlspecialchars($nama) .
+            "</p>" .
+            '<p style="margin:0 0 12px;"><strong>Email:</strong> ' .
+            htmlspecialchars($email) .
+            "</p>" .
+            '<hr style="border:none;border-top:1px solid #eee;margin:20px 0;">' .
+            '<p style="margin:0 0 8px;"><strong>Pesan Anda:</strong></p>' .
+            '<p style="margin:0 0 12px;padding:12px;background:#f9f9f9;border:1px solid #eee;">' .
+            nl2br(htmlspecialchars($pesan)) .
+            "</p>" .
+            "</div>";
 
         $bodyPlain = "Nama: {$nama}\nEmail: {$email}\nPesan:\n{$pesan}";
 
         $sent = sendEmail($subjek, $bodyHtml, $bodyPlain);
 
         if ($sent) {
-            $_SESSION['flash_success'] = 'Terima kasih! Pesan Anda telah dikirim. Kami akan segera menghubungi Anda.';
+            $_SESSION["flash_success"] =
+                "Terima kasih! Pesan Anda telah dikirim. Kami akan segera menghubungi Anda.";
             try {
-                $stmt = $pdo->prepare("INSERT INTO email (nama, email, subjek, pesan) VALUES (?, ?, ?, ?)");
+                $stmt = $pdo->prepare(
+                    "INSERT INTO email (nama, email, subjek, pesan) VALUES (?, ?, ?, ?)",
+                );
                 $stmt->execute([$nama, $email, $subjek, $pesan]);
             } catch (PDOException $e) {
-                $_SESSION['flash_error'] = 'data tidak tersimpan';
+                $_SESSION["flash_error"] = "data tidak tersimpan";
             }
         } else {
-            $_SESSION['flash_error'] = 'Gagal mengirim email.';
+            $_SESSION["flash_error"] = "Gagal mengirim email.";
         }
 
         header("Location: contact.php");
-        exit;
+        exit();
     }
 }
 
@@ -67,8 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $stmt = $pdo->query("SELECT * FROM sosmed");
 $social_media = $stmt->fetchAll();
 
-include '../includes/header.php';
-include '../includes/navbar.php';
+include __DIR__ . "/../includes/header.php";
+include __DIR__ . "/../includes/navbar.php";
 ?>
 
 <!-- Page Header -->
@@ -217,11 +225,15 @@ include '../includes/navbar.php';
                             <h4 class="fw-bold mb-3">Follow Us</h4>
                             <div class="d-flex flex-wrap gap-2">
                                 <?php foreach ($social_media as $sosmed): ?>
-                                    <a href="<?php echo htmlspecialchars($sosmed['url']); ?>"
+                                    <a href="<?php echo htmlspecialchars(
+                                        $sosmed["url"],
+                                    ); ?>"
                                         target="_blank"
                                         class="btn btn-outline-primary">
-                                        <i class="bi bi-<?php echo strtolower($sosmed['nama']); ?> me-2"></i>
-                                        <?php echo ucfirst($sosmed['nama']); ?>
+                                        <i class="bi bi-<?php echo strtolower(
+                                            $sosmed["nama"],
+                                        ); ?> me-2"></i>
+                                        <?php echo ucfirst($sosmed["nama"]); ?>
                                     </a>
                                 <?php endforeach; ?>
                             </div>
@@ -265,6 +277,9 @@ include '../includes/navbar.php';
     });
 </script>
 
-<?php include '../includes/footer.php';
+<?php
+include __DIR__ . "/../includes/footer.php";
 ob_end_flush();
+
+
 ?>

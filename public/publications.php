@@ -1,15 +1,20 @@
 <?php
-require_once '../config/db.php';
-$page_title = 'Publications';
+require_once __DIR__ . "/../config/db.php";
+$page_title = "Publications";
 
 // Pagination setup
-$filter_year = isset($_GET['year']) && $_GET['year'] !== 'all' ? (int)$_GET['year'] : null;
+$filter_year =
+    isset($_GET["year"]) && $_GET["year"] !== "all"
+        ? (int) $_GET["year"]
+        : null;
 $limit = 5;
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = isset($_GET["page"]) ? (int) $_GET["page"] : 1;
 $offset = ($page - 1) * $limit;
 
 // Ambil daftar tahun untuk sidebar
-$years_stmt = $pdo->query("SELECT DISTINCT tahun FROM publikasi ORDER BY tahun DESC");
+$years_stmt = $pdo->query(
+    "SELECT DISTINCT tahun FROM publikasi ORDER BY tahun DESC",
+);
 $years = $years_stmt->fetchAll(PDO::FETCH_COLUMN);
 
 // Jika filter per tahun
@@ -22,15 +27,17 @@ if ($filter_year) {
         ORDER BY p.judul ASC
         LIMIT :limit OFFSET :offset
     ");
-    $stmt->bindValue(':tahun', $filter_year, PDO::PARAM_INT);
-    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->bindValue(":tahun", $filter_year, PDO::PARAM_INT);
+    $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
+    $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
     $stmt->execute();
     $publications = $stmt->fetchAll();
 
     // Hitung total data untuk tahun itu
-    $count_stmt = $pdo->prepare("SELECT COUNT(*) FROM publikasi WHERE tahun = :tahun");
-    $count_stmt->execute(['tahun' => $filter_year]);
+    $count_stmt = $pdo->prepare(
+        "SELECT COUNT(*) FROM publikasi WHERE tahun = :tahun",
+    );
+    $count_stmt->execute(["tahun" => $filter_year]);
     $total_rows = $count_stmt->fetchColumn();
     $total_pages = ceil($total_rows / $limit);
 
@@ -41,7 +48,7 @@ if ($filter_year) {
         JOIN anggota a ON p.penulis_id = a.uuid
         WHERE p.tahun = :tahun
     ");
-    $author_stmt->bindValue(':tahun', $filter_year, PDO::PARAM_INT);
+    $author_stmt->bindValue(":tahun", $filter_year, PDO::PARAM_INT);
     $author_stmt->execute();
     $authors = $author_stmt->fetchAll(PDO::FETCH_COLUMN);
 } else {
@@ -58,21 +65,20 @@ if ($filter_year) {
     $author_stmt = $pdo->query("
         SELECT DISTINCT a.uuid
         FROM publikasi p
-        JOIN anggota a ON p.penulis_id = a.uuid"
-    );
+        JOIN anggota a ON p.penulis_id = a.uuid");
     $authors = $author_stmt->fetchAll(PDO::FETCH_COLUMN);
 }
 
 // Group by year
 $publications_by_year = [];
 foreach ($publications as $pub) {
-    $year = $pub['tahun'] ?: 'Tidak Diketahui';
+    $year = $pub["tahun"] ?: "Tidak Diketahui";
     $publications_by_year[$year][] = $pub;
 }
 krsort($publications_by_year);
 
-include '../includes/header.php';
-include '../includes/navbar.php';
+include __DIR__ . "/../includes/header.php";
+include __DIR__ . "/../includes/navbar.php";
 ?>
 
 <!-- Page Header -->
@@ -101,10 +107,10 @@ include '../includes/navbar.php';
                             </h3>
 
                             <div class="row g-4">
-                                <?php
-                                // Menampilkan 5 pubs per tahun
-                                $pubs_year = $filter_year ? $pubs : array_slice($pubs, 0, 5);
-                                ?>
+                                <?php // Menampilkan 5 pubs per tahun
+                                $pubs_year = $filter_year
+                                    ? $pubs
+                                    : array_slice($pubs, 0, 5); ?>
                                 <?php foreach ($pubs_year as $pub): ?>
                                     <div class="col-12">
                                         <div class="card border-0 shadow-sm">
@@ -114,22 +120,42 @@ include '../includes/navbar.php';
                                                         <i class="bi bi-file-earmark-text text-primary" style="font-size: 3rem;"></i>
                                                     </div>
                                                     <div class="col-md-9">
-                                                        <h5 class="fw-bold mb-2"><?= htmlspecialchars($pub['judul']); ?></h5>
+                                                        <h5 class="fw-bold mb-2"><?= htmlspecialchars(
+                                                            $pub["judul"],
+                                                        ) ?></h5>
                                                         <p class="text-muted mb-2">
-                                                        <?php if ($pub['penulis_nama']): ?>
-                                                            <i class="bi bi-person me-1"></i><strong><?= htmlspecialchars($pub['penulis_nama']); ?></strong>
+                                                        <?php if (
+                                                            $pub["penulis_nama"]
+                                                        ): ?>
+                                                            <i class="bi bi-person me-1"></i><strong><?= htmlspecialchars(
+                                                                $pub[
+                                                                    "penulis_nama"
+                                                                ],
+                                                            ) ?></strong>
                                                         <?php endif; ?>
-                                                        <?php if ($pub['kategori']): ?>
-                                                            <span class="ms-3"><i class="bi bi-tag me-1"></i><?= htmlspecialchars($pub['kategori']); ?></span>
+                                                        <?php if (
+                                                            $pub["kategori"]
+                                                        ): ?>
+                                                            <span class="ms-3"><i class="bi bi-tag me-1"></i><?= htmlspecialchars(
+                                                                $pub[
+                                                                    "kategori"
+                                                                ],
+                                                            ) ?></span>
                                                         <?php endif; ?>
                                                         </p>
                                                         <p class="text-muted small mb-0">
-                                                        <i class="bi bi-calendar3 me-1"></i><?= $pub['tahun']; ?>
+                                                        <i class="bi bi-calendar3 me-1"></i><?= $pub[
+                                                            "tahun"
+                                                        ] ?>
                                                         </p>
                                                     </div>
                                                     <div class="col-md-2 text-md-end">
-                                                        <?php if ($pub['tautan']): ?>
-                                                        <a href="<?= htmlspecialchars($pub['tautan']); ?>" target="_blank" class="btn btn-primary">
+                                                        <?php if (
+                                                            $pub["tautan"]
+                                                        ): ?>
+                                                        <a href="<?= htmlspecialchars(
+                                                            $pub["tautan"],
+                                                        ) ?>" target="_blank" class="btn btn-primary">
                                                             <i class="bi bi-box-arrow-up-right me-2"></i>View
                                                         </a>
                                                         <?php endif; ?>
@@ -144,16 +170,29 @@ include '../includes/navbar.php';
                             <?php if ($filter_year && $total_pages > 1): ?>
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination justify-content-center mt-4">
-                                        <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                                            <a class="page-link" href="?year=<?= $year ?>&page=<?= $page - 1 ?>">&laquo; Sebelumnya</a>
+                                        <li class="page-item <?= $page <= 1
+                                            ? "disabled"
+                                            : "" ?>">
+                                            <a class="page-link" href="?year=<?= $year ?>&page=<?= $page -
+    1 ?>">&laquo; Sebelumnya</a>
                                         </li>
-                                        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                                            <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
+                                        <?php for (
+                                            $i = 1;
+                                            $i <= $total_pages;
+                                            $i++
+                                        ): ?>
+                                            <li class="page-item <?= $page == $i
+                                                ? "active"
+                                                : "" ?>">
                                                 <a class="page-link" href="?year=<?= $year ?>&page=<?= $i ?>"><?= $i ?></a>
                                             </li>
                                         <?php endfor; ?>
-                                        <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
-                                            <a class="page-link" href="?year=<?= $year ?>&page=<?= $page + 1 ?>">Selanjutnya &raquo;</a>
+                                        <li class="page-item <?= $page >=
+                                        $total_pages
+                                            ? "disabled"
+                                            : "" ?>">
+                                            <a class="page-link" href="?year=<?= $year ?>&page=<?= $page +
+    1 ?>">Selanjutnya &raquo;</a>
                                         </li>
                                     </ul>
                                 </nav>
@@ -181,11 +220,16 @@ include '../includes/navbar.php';
                         <i class="bi bi-funnel me-2"></i>Filter Tahun
                     </h5>
                     <div class="list-group">
-                        <a href="?year=all" class="list-group-item list-group-item-action <?= !$filter_year ? 'active' : '' ?>">
+                        <a href="?year=all" class="list-group-item list-group-item-action <?= !$filter_year
+                            ? "active"
+                            : "" ?>">
                             <i class="bi bi-collection me-2"></i>Semua Tahun
                         </a>
                         <?php foreach ($years as $year): ?>
-                            <a href="?year=<?= $year ?>" class="list-group-item list-group-item-action <?= ($filter_year == $year) ? 'active' : '' ?>">
+                            <a href="?year=<?= $year ?>" class="list-group-item list-group-item-action <?= $filter_year ==
+$year
+    ? "active"
+    : "" ?>">
                             <i class="bi bi-calendar-event me-2"></i><?= $year ?>
                             </a>
                         <?php endforeach; ?>
@@ -205,8 +249,8 @@ include '../includes/navbar.php';
                 <div class="col-md-4 mb-4 mb-md-0">
                     <div class="card border-0 shadow-sm h-100 p-4">
                         <h2 class="display-4 fw-bold text-primary mb-2">
-                            <?php if ($filter_year){
-                                echo ($total_rows);
+                            <?php if ($filter_year) {
+                                echo $total_rows;
                             } else {
                                 echo count($publications);
                             } ?>
@@ -225,9 +269,7 @@ include '../includes/navbar.php';
                 <div class="col-md-4">
                     <div class="card border-0 shadow-sm h-100 p-4">
                         <h2 class="display-4 fw-bold text-primary mb-2">
-                            <?php
-                                echo count($authors);
-                            ?>
+                            <?php echo count($authors); ?>
                         </h2>
                         <p class="text-muted mb-0">Contributing Authors</p>
                     </div>
@@ -256,4 +298,4 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 
-<?php include '../includes/footer.php'; ?>
+<?php include __DIR__ . "/../includes/footer.php"; ?>

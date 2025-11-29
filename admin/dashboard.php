@@ -1,42 +1,41 @@
 <?php
-$page_title = 'Dashboard';
-include 'includes/admin_header.php';
+$page_title = "Dashboard";
+include __DIR__ . "/includes/admin_header.php";
 
 // Get statistics
 $stats = [];
 
 // Count berita
 $stmt = $pdo->query("SELECT COUNT(*) as total FROM berita");
-$stats['berita'] = $stmt->fetch()['total'];
+$stats["berita"] = $stmt->fetch()["total"];
 
 // Count kegiatan
 $stmt = $pdo->query("SELECT COUNT(*) as total FROM kegiatan");
-$stats['kegiatan'] = $stmt->fetch()['total'];
+$stats["kegiatan"] = $stmt->fetch()["total"];
 
 // Count publikasi
 $stmt = $pdo->query("SELECT COUNT(*) as total FROM publikasi");
-$stats['publikasi'] = $stmt->fetch()['total'];
+$stats["publikasi"] = $stmt->fetch()["total"];
 
 // Count anggota
 $stmt = $pdo->query("SELECT COUNT(*) as total FROM anggota");
-$stats['anggota'] = $stmt->fetch()['total'];
+$stats["anggota"] = $stmt->fetch()["total"];
 
 // Count produk
 $stmt = $pdo->query("SELECT COUNT(*) as total FROM produk");
-$stats['produk'] = $stmt->fetch()['total'];
+$stats["produk"] = $stmt->fetch()["total"];
 
 // Count galeri
 $stmt = $pdo->query("SELECT COUNT(*) as total FROM galeri");
-$stats['galeri'] = $stmt->fetch()['total'];
+$stats["galeri"] = $stmt->fetch()["total"];
 
 //Count Riset
 $stmt = $pdo->query("SELECT COUNT(*) as total FROM topik_riset");
-$stats['topik_riset'] = $stmt->fetch()['total'];
+$stats["topik_riset"] = $stmt->fetch()["total"];
 
 //Count Blueprint
 $stmt = $pdo->query("SELECT COUNT(*) as total FROM blueprint");
-$stats['blueprint'] = $stmt->fetch()['total'];
-
+$stats["blueprint"] = $stmt->fetch()["total"];
 
 // Get recent news
 $stmt = $pdo->query("SELECT * FROM berita ORDER BY created_at DESC LIMIT 5");
@@ -55,7 +54,9 @@ $recent_activities = $stmt->fetchAll();
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <p class="text-muted mb-1">Total Berita</p>
-                    <h3 class="fw-bold mb-0"><?php echo $stats['berita']; ?></h3>
+                    <h3 class="fw-bold mb-0"><?php echo $stats[
+                        "berita"
+                    ]; ?></h3>
                 </div>
                 <div class="bg-primary bg-opacity-10 p-3 rounded">
                     <i class="bi bi-newspaper text-primary fs-2"></i>
@@ -69,7 +70,9 @@ $recent_activities = $stmt->fetchAll();
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <p class="text-muted mb-1">Total Kegiatan</p>
-                    <h3 class="fw-bold mb-0"><?php echo $stats['kegiatan']; ?></h3>
+                    <h3 class="fw-bold mb-0"><?php echo $stats[
+                        "kegiatan"
+                    ]; ?></h3>
                 </div>
                 <div class="bg-success bg-opacity-10 p-3 rounded">
                     <i class="bi bi-calendar-event text-success fs-2"></i>
@@ -83,7 +86,9 @@ $recent_activities = $stmt->fetchAll();
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <p class="text-muted mb-1">Total Publikasi</p>
-                    <h3 class="fw-bold mb-0"><?php echo $stats['publikasi']; ?></h3>
+                    <h3 class="fw-bold mb-0"><?php echo $stats[
+                        "publikasi"
+                    ]; ?></h3>
                 </div>
                 <div class="bg-info bg-opacity-10 p-3 rounded">
                     <i class="bi bi-journal-text text-info fs-2"></i>
@@ -97,7 +102,9 @@ $recent_activities = $stmt->fetchAll();
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <p class="text-muted mb-1">Total Anggota</p>
-                    <h3 class="fw-bold mb-0"><?php echo $stats['anggota']; ?></h3>
+                    <h3 class="fw-bold mb-0"><?php echo $stats[
+                        "anggota"
+                    ]; ?></h3>
                 </div>
                 <div class="bg-warning bg-opacity-10 p-3 rounded">
                     <i class="bi bi-people text-warning fs-2"></i>
@@ -113,7 +120,9 @@ $recent_activities = $stmt->fetchAll();
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <p class="text-muted mb-1">Total Produk</p>
-                    <h3 class="fw-bold mb-0"><?php echo $stats['produk']; ?></h3>
+                    <h3 class="fw-bold mb-0"><?php echo $stats[
+                        "produk"
+                    ]; ?></h3>
                 </div>
                 <div class="bg-danger bg-opacity-10 p-3 rounded">
                     <i class="bi bi-box-seam text-danger fs-2"></i>
@@ -127,7 +136,9 @@ $recent_activities = $stmt->fetchAll();
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <p class="text-muted mb-1">Total Galeri</p>
-                    <h3 class="fw-bold mb-0"><?php echo $stats['galeri']; ?></h3>
+                    <h3 class="fw-bold mb-0"><?php echo $stats[
+                        "galeri"
+                    ]; ?></h3>
                 </div>
                 <div class="bg-secondary bg-opacity-10 p-3 rounded">
                     <i class="bi bi-images text-secondary fs-2"></i>
@@ -141,7 +152,9 @@ $recent_activities = $stmt->fetchAll();
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <p class="text-muted mb-1">Total Blueprint</p>
-                    <h3 class="fw-bold mb-0"><?php echo $stats['blueprint']; ?></h3>
+                    <h3 class="fw-bold mb-0"><?php echo $stats[
+                        "blueprint"
+                    ]; ?></h3>
                 </div>
                 <div class="bg-secondary bg-opacity-10 p-3 rounded">
                     <i class="bi bi-diagram-3 text-purple fs-2"></i>
@@ -155,7 +168,9 @@ $recent_activities = $stmt->fetchAll();
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <p class="text-muted mb-1">Total Topik & Riset</p>
-                    <h3 class="fw-bold mb-0"><?php echo $stats['topik_riset']; ?></h3>
+                    <h3 class="fw-bold mb-0"><?php echo $stats[
+                        "topik_riset"
+                    ]; ?></h3>
                 </div>
                 <div class="bg-secondary bg-opacity-10 p-3 rounded">
                     <i class="bi bi-lightbulb text-warning fs-2"></i>
@@ -186,16 +201,29 @@ $recent_activities = $stmt->fetchAll();
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="flex-grow-1">
                                         <h6 class="mb-1 fw-bold">
-                                            <?php echo htmlspecialchars($news['judul']); ?>
+                                            <?php echo htmlspecialchars(
+                                                $news["judul"],
+                                            ); ?>
                                         </h6>
                                         <p class="mb-1 text-muted small">
-                                            <?php echo substr(htmlspecialchars($news['deskripsi']), 0, 100) . '...'; ?>
+                                            <?php echo substr(
+                                                htmlspecialchars(
+                                                    $news["deskripsi"],
+                                                ),
+                                                0,
+                                                100,
+                                            ) . "..."; ?>
                                         </p>
                                         <small class="text-muted">
                                             <i class="bi bi-calendar me-1"></i>
-                                            <?php echo date('d M Y', strtotime($news['tanggal'])); ?>
+                                            <?php echo date(
+                                                "d M Y",
+                                                strtotime($news["tanggal"]),
+                                            ); ?>
                                             <span class="badge bg-primary ms-2">
-                                                <?php echo ucfirst($news['kategori']); ?>
+                                                <?php echo ucfirst(
+                                                    $news["kategori"],
+                                                ); ?>
                                             </span>
                                         </small>
                                     </div>
@@ -232,19 +260,30 @@ $recent_activities = $stmt->fetchAll();
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="flex-grow-1">
                                         <h6 class="mb-1 fw-bold">
-                                            <?php echo htmlspecialchars($activity['nama']); ?>
+                                            <?php echo htmlspecialchars(
+                                                $activity["nama"],
+                                            ); ?>
                                         </h6>
-                                        <?php if ($activity['pemateri']): ?>
+                                        <?php if ($activity["pemateri"]): ?>
                                             <p class="mb-1 text-muted small">
                                                 <i class="bi bi-person me-1"></i>
-                                                <?php echo htmlspecialchars($activity['pemateri']); ?>
+                                                <?php echo htmlspecialchars(
+                                                    $activity["pemateri"],
+                                                ); ?>
                                             </p>
                                         <?php endif; ?>
                                         <small class="text-muted">
                                             <i class="bi bi-calendar me-1"></i>
-                                            <?php echo date('d M Y', strtotime($activity['tanggal'])); ?>
+                                            <?php echo date(
+                                                "d M Y",
+                                                strtotime($activity["tanggal"]),
+                                            ); ?>
                                             <span class="badge bg-success ms-2">
-                                                <?php echo ucfirst($activity['kategori_kegiatan']); ?>
+                                                <?php echo ucfirst(
+                                                    $activity[
+                                                        "kategori_kegiatan"
+                                                    ],
+                                                ); ?>
                                             </span>
                                         </small>
                                     </div>
@@ -300,4 +339,4 @@ $recent_activities = $stmt->fetchAll();
     </div>
 </div> -->
 
-<?php include 'includes/admin_footer.php'; ?>
+<?php include __DIR__ . "/includes/admin_footer.php"; ?>

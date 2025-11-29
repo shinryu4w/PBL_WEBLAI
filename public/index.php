@@ -1,26 +1,36 @@
 <?php
-require_once '../config/db.php';
-$page_title = 'Home';
+require_once __DIR__ . "/../config/db.php";
+$page_title = "Home";
 
 // Fetch dashboard background
-$stmt_bg = $pdo->query("SELECT * FROM dashboard_foto ORDER BY updated_at DESC LIMIT 1");
+$stmt_bg = $pdo->query(
+    "SELECT * FROM dashboard_foto ORDER BY updated_at DESC LIMIT 1",
+);
 $dashboard_bg = $stmt_bg->fetch();
-$bg_image = '';
-if ($dashboard_bg && $dashboard_bg['path_gambar']) {
-    $bg_image = '../assets/img/dashboard/' . htmlspecialchars($dashboard_bg['path_gambar']);
+$bg_image = "";
+if ($dashboard_bg && $dashboard_bg["path_gambar"]) {
+    $bg_image =
+        "../assets/img/dashboard/" .
+        htmlspecialchars($dashboard_bg["path_gambar"]);
 }
 
 // Fetch latest news
-$stmt_berita = $pdo->query("SELECT * FROM berita ORDER BY tanggal DESC LIMIT 3");
+$stmt_berita = $pdo->query(
+    "SELECT * FROM berita ORDER BY tanggal DESC LIMIT 3",
+);
 $latest_news = $stmt_berita->fetchAll();
 
 // Fetch latest activities
 $limit = 4;
-$page_la = isset($_GET['latest_activities_page']) ? (int)$_GET['latest_activities_page'] : 1;
+$page_la = isset($_GET["latest_activities_page"])
+    ? (int) $_GET["latest_activities_page"]
+    : 1;
 $offset_la = ($page_la - 1) * $limit;
-$stmt_kegiatan = $pdo->prepare("SELECT * FROM kegiatan ORDER BY tanggal DESC LIMIT :limit OFFSET :offset");
-$stmt_kegiatan->bindValue(':limit', $limit, PDO::PARAM_INT);
-$stmt_kegiatan->bindValue(':offset', $offset_la, PDO::PARAM_INT);
+$stmt_kegiatan = $pdo->prepare(
+    "SELECT * FROM kegiatan ORDER BY tanggal DESC LIMIT :limit OFFSET :offset",
+);
+$stmt_kegiatan->bindValue(":limit", $limit, PDO::PARAM_INT);
+$stmt_kegiatan->bindValue(":offset", $offset_la, PDO::PARAM_INT);
 $stmt_kegiatan->execute();
 $latest_activities = $stmt_kegiatan->fetchAll();
 $count_stmt_la = $pdo->prepare("SELECT COUNT(*) FROM kegiatan");
@@ -36,12 +46,14 @@ $partnerships = $stmt_partnership->fetchAll();
 $stmt_profile = $pdo->query("SELECT * FROM profile LIMIT 1");
 $profile = $stmt_profile->fetch();
 
-include '../includes/header.php';
-include '../includes/navbar.php';
+include __DIR__ . "/../includes/header.php";
+include __DIR__ . "/../includes/navbar.php";
 ?>
 
 <!-- Hero Section -->
-<section class="hero-section position-relative py-5" style="<?php echo $bg_image ? "background: url('$bg_image') center/cover no-repeat;" : 'background: linear-gradient(135deg, #1E4BA3 0%, #4A90E2 100%);'; ?> color: white; min-height: 500px; overflow: hidden;">
+<section class="hero-section position-relative py-5" style="<?php echo $bg_image
+    ? "background: url('$bg_image') center/cover no-repeat;"
+    : "background: linear-gradient(135deg, #1E4BA3 0%, #4A90E2 100%);"; ?> color: white; min-height: 500px; overflow: hidden;">
     <!-- Gradient Overlay -->
     <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(135deg, rgba(30, 75, 163, 0.25) 0%, rgba(74, 144, 226, 0.25) 100%); z-index: 1;"></div>
 
@@ -175,23 +187,36 @@ include '../includes/navbar.php';
                         <div class="card h-100 shadow-sm border-0">
                             <div class="card-body">
                                 <span class="badge bg-primary mb-2">
-                                    <?php echo ucfirst($news['kategori']); ?>
+                                    <?php echo ucfirst($news["kategori"]); ?>
                                 </span>
                                 <h5 class="card-title fw-bold">
-                                    <?php echo htmlspecialchars($news['judul']); ?>
+                                    <?php echo htmlspecialchars(
+                                        $news["judul"],
+                                    ); ?>
                                 </h5>
                                 <p class="text-muted small mb-3">
                                     <i class="bi bi-calendar me-2"></i>
-                                    <?php echo date('d M Y', strtotime($news['tanggal'])); ?>
-                                    <?php if ($news['tempat']): ?>
+                                    <?php echo date(
+                                        "d M Y",
+                                        strtotime($news["tanggal"]),
+                                    ); ?>
+                                    <?php if ($news["tempat"]): ?>
                                         <i class="bi bi-geo-alt ms-2 me-1"></i>
-                                        <?php echo htmlspecialchars($news['tempat']); ?>
+                                        <?php echo htmlspecialchars(
+                                            $news["tempat"],
+                                        ); ?>
                                     <?php endif; ?>
                                 </p>
                                 <p class="card-text text-muted">
-                                    <?php echo substr(htmlspecialchars($news['deskripsi']), 0, 120) . '...'; ?>
+                                    <?php echo substr(
+                                        htmlspecialchars($news["deskripsi"]),
+                                        0,
+                                        120,
+                                    ) . "..."; ?>
                                 </p>
-                                <a href="news.php?id=<?php echo $news['uuid']; ?>" class="btn btn-sm btn-outline-primary">
+                                <a href="news.php?id=<?php echo $news[
+                                    "uuid"
+                                ]; ?>" class="btn btn-sm btn-outline-primary">
                                     Read More <i class="bi bi-arrow-right"></i>
                                 </a>
                             </div>
@@ -235,23 +260,38 @@ include '../includes/navbar.php';
                         <div class="card h-100 shadow-sm border-0">
                             <div class="card-body">
                                 <span class="badge bg-success mb-2">
-                                    <?php echo ucfirst($activity['kategori_kegiatan']); ?>
+                                    <?php echo ucfirst(
+                                        $activity["kategori_kegiatan"],
+                                    ); ?>
                                 </span>
                                 <h6 class="card-title fw-bold">
-                                    <?php echo htmlspecialchars($activity['nama']); ?>
+                                    <?php echo htmlspecialchars(
+                                        $activity["nama"],
+                                    ); ?>
                                 </h6>
                                 <p class="text-muted small mb-2">
                                     <i class="bi bi-calendar me-1"></i>
-                                    <?php echo date('d M Y', strtotime($activity['tanggal'])); ?>
+                                    <?php echo date(
+                                        "d M Y",
+                                        strtotime($activity["tanggal"]),
+                                    ); ?>
                                 </p>
-                                <?php if ($activity['pemateri']): ?>
+                                <?php if ($activity["pemateri"]): ?>
                                     <p class="text-muted small mb-2">
                                         <i class="bi bi-person me-1"></i>
-                                        <?php echo htmlspecialchars($activity['pemateri']); ?>
+                                        <?php echo htmlspecialchars(
+                                            $activity["pemateri"],
+                                        ); ?>
                                     </p>
                                 <?php endif; ?>
                                 <p class="card-text text-muted small">
-                                    <?php echo substr(htmlspecialchars($activity['deskripsi_singkat']), 0, 80) . '...'; ?>
+                                    <?php echo substr(
+                                        htmlspecialchars(
+                                            $activity["deskripsi_singkat"],
+                                        ),
+                                        0,
+                                        80,
+                                    ) . "..."; ?>
                                 </p>
                             </div>
                         </div>
@@ -261,16 +301,29 @@ include '../includes/navbar.php';
                 <?php if ($pages_activities > 1): ?>
                     <nav aria-label="Page navigation">
                         <ul class="pagination justify-content-center mt-4">
-                            <li class="page-item <?= ($page_la <= 1) ? 'disabled' : '' ?>">
-                                <a class="page-link" href="?latest_activities_page=<?= $page_la - 1 ?>">&laquo; Sebelumnya</a>
+                            <li class="page-item <?= $page_la <= 1
+                                ? "disabled"
+                                : "" ?>">
+                                <a class="page-link" href="?latest_activities_page=<?= $page_la -
+                                    1 ?>">&laquo; Sebelumnya</a>
                             </li>
-                            <?php for ($i = 1; $i <= $pages_activities; $i++): ?>
-                                <li class="page-item <?= ($page_la == $i) ? 'active' : '' ?>">
+                            <?php for (
+                                $i = 1;
+                                $i <= $pages_activities;
+                                $i++
+                            ): ?>
+                                <li class="page-item <?= $page_la == $i
+                                    ? "active"
+                                    : "" ?>">
                                     <a class="page-link" href="?latest_activities_page=<?= $i ?>"><?= $i ?></a>
                                 </li>
                             <?php endfor; ?>
-                            <li class="page-item <?= ($page_la >= $pages_activities) ? 'disabled' : '' ?>">
-                                <a class="page-link" href="?latest_activities_page=<?= $page_la + 1 ?>">Selanjutnya &raquo;</a>
+                            <li class="page-item <?= $page_la >=
+                            $pages_activities
+                                ? "disabled"
+                                : "" ?>">
+                                <a class="page-link" href="?latest_activities_page=<?= $page_la +
+                                    1 ?>">Selanjutnya &raquo;</a>
                             </li>
                         </ul>
                     </nav>
@@ -301,20 +354,30 @@ include '../includes/navbar.php';
             <div class="row g-4  justify-content-center align-items-center text-center">
                 <?php foreach ($partnerships as $partner): ?>
                     <div class="col-6 col-md-4 col-lg-2 text-center">
-                        <a href="<?php echo htmlspecialchars($partner['website']); ?>"
+                        <a href="<?php echo htmlspecialchars(
+                            $partner["website"],
+                        ); ?>"
                             target="_blank"
                             class="text-decoration-none"
-                            title="<?php echo htmlspecialchars($partner['nama']); ?>">
-                            <?php if ($partner['logo']): ?>
-                                <img src="../assets/img/<?php echo htmlspecialchars($partner['logo']); ?>"
-                                    alt="<?php echo htmlspecialchars($partner['nama']); ?>"
+                            title="<?php echo htmlspecialchars(
+                                $partner["nama"],
+                            ); ?>">
+                            <?php if ($partner["logo"]): ?>
+                                <img src="../assets/img/<?php echo htmlspecialchars(
+                                    $partner["logo"],
+                                ); ?>"
+                                    alt="<?php echo htmlspecialchars(
+                                        $partner["nama"],
+                                    ); ?>"
                                     class="img-fluid grayscale-hover"
                                     style="max-height: 80px; filter: grayscale(100%); transition: 0.3s;"
                                     onmouseover="this.style.filter='grayscale(0%)'"
                                     onmouseout="this.style.filter='grayscale(100%)'">
                             <?php else: ?>
                                 <div class="p-3 bg-light rounded">
-                                    <strong><?php echo htmlspecialchars($partner['nama']); ?></strong>
+                                    <strong><?php echo htmlspecialchars(
+                                        $partner["nama"],
+                                    ); ?></strong>
                                 </div>
                             <?php endif; ?>
                         </a>
@@ -338,4 +401,4 @@ include '../includes/navbar.php';
     </div>
 </section>
 
-<?php include '../includes/footer.php'; ?>
+<?php include __DIR__ . "/../includes/footer.php"; ?>

@@ -1,9 +1,9 @@
 <?php
 
-require_once '../config/db.php';
-require_once '../helpers/sanitize.php';
-require_once '../helpers/upload.php';
-require_once 'includes/auth.php';
+require_once __DIR__ . "/../config/db.php";
+require_once __DIR__ . "/../helpers/sanitize.php";
+require_once __DIR__ . "/../helpers/upload.php";
+require_once __DIR__ . "/includes/auth.php";
 
 // header anti-cache
 header("Cache-Control: no-cache, no-store, must-revalidate");
@@ -12,27 +12,27 @@ header("Expires: 0");
 
 // Redirect jika sudah login
 if (is_logged_in()) {
-    header('Location: dashboard.php');
+    header("Location: dashboard.php");
     exit();
 }
 
-$error = '';
-$success = '';
+$error = "";
+$success = "";
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = clean_input($_POST['username']);
-    $password = $_POST['password'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = clean_input($_POST["username"]);
+    $password = $_POST["password"];
 
     if (empty($username) || empty($password)) {
-        $error = 'Username dan password harus diisi!';
+        $error = "Username dan password harus diisi!";
     } else {
         $result = login_user($username, $password, $pdo);
 
-        if ($result['success']) {
-            header('Location: dashboard.php');
+        if ($result["success"]) {
+            header("Location: dashboard.php");
             exit();
         } else {
-            $error = $result['message'];
+            $error = $result["message"];
         }
     }
 }

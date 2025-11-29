@@ -1,21 +1,20 @@
 <?php
-require_once '../config/db.php';
-$page_title = 'Research & Products';
-
+require_once __DIR__ . "/../config/db.php";
+$page_title = "Research & Products";
 
 // data produk
 $limit_pd = 6;
-$page_pd = isset($_GET['product_page']) ? (int)$_GET['product_page'] : 1;
+$page_pd = isset($_GET["product_page"]) ? (int) $_GET["product_page"] : 1;
 $offset_pd = ($page_pd - 1) * $limit_pd;
 $stmt = $pdo->prepare("
-    SELECT p.*, a.nama as pembuat_nama 
-    FROM produk p 
-    LEFT JOIN anggota a ON p.pembuat_id = a.uuid 
+    SELECT p.*, a.nama as pembuat_nama
+    FROM produk p
+    LEFT JOIN anggota a ON p.pembuat_id = a.uuid
     ORDER BY p.tahun DESC, p.nama ASC
     LIMIT :limit OFFSET :offset
 ");
-$stmt->bindValue(':limit', $limit_pd, PDO::PARAM_INT);
-$stmt->bindValue(':offset', $offset_pd, PDO::PARAM_INT);
+$stmt->bindValue(":limit", $limit_pd, PDO::PARAM_INT);
+$stmt->bindValue(":offset", $offset_pd, PDO::PARAM_INT);
 $stmt->execute();
 $count_stmt_pd = $pdo->prepare("SELECT COUNT(*) FROM produk");
 $count_stmt_pd->execute();
@@ -25,15 +24,15 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 //ambil data blueprint
 $limit_bp = 5;
-$page_bp = isset($_GET['blueprint_page']) ? (int)$_GET['blueprint_page'] : 1;
+$page_bp = isset($_GET["blueprint_page"]) ? (int) $_GET["blueprint_page"] : 1;
 $offset_bp = ($page_bp - 1) * $limit_bp;
 $stmt = $pdo->prepare("
     SELECT judul, deskripsi
     FROM blueprint
     LIMIT :limit OFFSET :offset
 ");
-$stmt->bindValue(':limit', $limit_bp, PDO::PARAM_INT);
-$stmt->bindValue(':offset', $offset_bp, PDO::PARAM_INT);
+$stmt->bindValue(":limit", $limit_bp, PDO::PARAM_INT);
+$stmt->bindValue(":offset", $offset_bp, PDO::PARAM_INT);
 $stmt->execute();
 $count_stmt_bp = $pdo->prepare("SELECT COUNT(*) FROM blueprint");
 $count_stmt_bp->execute();
@@ -43,15 +42,15 @@ $blueprint = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 //ambil data topik riset
 $limit_tp = 5;
-$page_tp = isset($_GET['topic_page']) ? (int)$_GET['topic_page'] : 1;
+$page_tp = isset($_GET["topic_page"]) ? (int) $_GET["topic_page"] : 1;
 $offset_tp = ($page_tp - 1) * $limit_tp;
 $stmt = $pdo->prepare("
     SELECT topik
     FROM topik_riset
     LIMIT :limit OFFSET :offset
 ");
-$stmt->bindValue(':limit', $limit_tp, PDO::PARAM_INT);
-$stmt->bindValue(':offset', $offset_tp, PDO::PARAM_INT);
+$stmt->bindValue(":limit", $limit_tp, PDO::PARAM_INT);
+$stmt->bindValue(":offset", $offset_tp, PDO::PARAM_INT);
 $stmt->execute();
 $count_stmt_tp = $pdo->prepare("SELECT COUNT(*) FROM topik_riset");
 $count_stmt_tp->execute();
@@ -59,8 +58,8 @@ $rows_topik = $count_stmt_tp->fetchColumn();
 $pages_topik = ceil($rows_topik / $limit_tp);
 $topik = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-include '../includes/header.php';
-include '../includes/navbar.php';
+include __DIR__ . "/../includes/header.php";
+include __DIR__ . "/../includes/navbar.php";
 ?>
 
 <!-- Page Header -->
@@ -95,7 +94,9 @@ include '../includes/navbar.php';
                                     <i class="bi bi-lightbulb-fill text-warning" style="font-size: 2.5rem;"></i>
                                 </div>
                                 <p class="mb-0 text-muted">
-                                    <?php echo nl2br(htmlspecialchars($topic['topik'])); ?>
+                                    <?php echo nl2br(
+                                        htmlspecialchars($topic["topik"]),
+                                    ); ?>
                                 </p>
                             </div>
                         </div>
@@ -121,10 +122,14 @@ include '../includes/navbar.php';
                 <?php foreach ($products as $product): ?>
                     <div class="col-md-6 col-lg-4">
                         <div class="card h-100 border-0 shadow-sm">
-                            <?php if ($product['path_gambar']): ?>
-                                <img src="../assets/img/<?php echo htmlspecialchars($product['path_gambar']); ?>"
+                            <?php if ($product["path_gambar"]): ?>
+                                <img src="../assets/img/<?php echo htmlspecialchars(
+                                    $product["path_gambar"],
+                                ); ?>"
                                     class="card-img-top"
-                                    alt="<?php echo htmlspecialchars($product['nama']); ?>"
+                                    alt="<?php echo htmlspecialchars(
+                                        $product["nama"],
+                                    ); ?>"
                                     style="height: 200px; object-fit: contain;">
                             <?php else: ?>
                                 <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
@@ -135,26 +140,34 @@ include '../includes/navbar.php';
 
                             <div class="card-body d-flex flex-column">
                                 <span class="badge bg-primary align-self-start mb-2">
-                                    <?php echo $product['tahun'] ?: 'N/A'; ?>
+                                    <?php echo $product["tahun"] ?: "N/A"; ?>
                                 </span>
 
                                 <h5 class="card-title fw-bold mb-3">
-                                    <?php echo htmlspecialchars($product['nama']); ?>
+                                    <?php echo htmlspecialchars(
+                                        $product["nama"],
+                                    ); ?>
                                 </h5>
 
-                                <?php if ($product['pembuat_nama']): ?>
+                                <?php if ($product["pembuat_nama"]): ?>
                                     <p class="text-muted small mb-2">
                                         <i class="bi bi-person me-1"></i>
-                                        <strong><?php echo htmlspecialchars($product['pembuat_nama']); ?></strong>
+                                        <strong><?php echo htmlspecialchars(
+                                            $product["pembuat_nama"],
+                                        ); ?></strong>
                                     </p>
                                 <?php endif; ?>
 
                                 <p class="card-text text-muted flex-grow-1">
-                                    <?php echo htmlspecialchars($product['deskripsi']); ?>
+                                    <?php echo htmlspecialchars(
+                                        $product["deskripsi"],
+                                    ); ?>
                                 </p>
 
-                                <?php if ($product['link_demo']): ?>
-                                    <a href="<?php echo htmlspecialchars($product['link_demo']); ?>"
+                                <?php if ($product["link_demo"]): ?>
+                                    <a href="<?php echo htmlspecialchars(
+                                        $product["link_demo"],
+                                    ); ?>"
                                         target="_blank"
                                         class="btn btn-outline-primary mt-auto">
                                         <i class="bi bi-eye me-2"></i>View Demo
@@ -169,16 +182,24 @@ include '../includes/navbar.php';
             <?php if ($pages_produk > 1): ?>
                 <nav aria-label="Page navigation">
                     <ul class="pagination justify-content-center mt-4">
-                        <li class="page-item <?= ($page_pd <= 1) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?product_page=<?= $page_pd - 1 ?>&blueprint_page=<?= $page_bp ?>&topic_page=<?= $page_tp ?>">&laquo; Sebelumnya</a>
+                        <li class="page-item <?= $page_pd <= 1
+                            ? "disabled"
+                            : "" ?>">
+                            <a class="page-link" href="?product_page=<?= $page_pd -
+                                1 ?>&blueprint_page=<?= $page_bp ?>&topic_page=<?= $page_tp ?>">&laquo; Sebelumnya</a>
                         </li>
                         <?php for ($i = 1; $i <= $pages_produk; $i++): ?>
-                            <li class="page-item <?= ($page_pd == $i) ? 'active' : '' ?>">
+                            <li class="page-item <?= $page_pd == $i
+                                ? "active"
+                                : "" ?>">
                                 <a class="page-link" href="?product_page=<?= $i ?>&blueprint_page=<?= $page_bp ?>&topic_page=<?= $page_tp ?>"><?= $i ?></a>
                             </li>
                         <?php endfor; ?>
-                        <li class="page-item <?= ($page_pd >= $pages_produk) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?product_page=<?= $page_pd + 1 ?>&blueprint_page=<?= $page_bp ?>&topic_page=<?= $page_tp ?>">Selanjutnya &raquo;</a>
+                        <li class="page-item <?= $page_pd >= $pages_produk
+                            ? "disabled"
+                            : "" ?>">
+                            <a class="page-link" href="?product_page=<?= $page_pd +
+                                1 ?>&blueprint_page=<?= $page_bp ?>&topic_page=<?= $page_tp ?>">Selanjutnya &raquo;</a>
                         </li>
                     </ul>
                 </nav>
@@ -211,14 +232,23 @@ include '../includes/navbar.php';
                                     </div>
                                     <div class="flex-grow-1">
                                         <h4 class="fw-bold mb-3">
-                                            <?php echo htmlspecialchars($blueprint['judul']); ?>
+                                            <?php echo htmlspecialchars(
+                                                $blueprint["judul"],
+                                            ); ?>
                                         </h4>
                                         <p class="text-muted mb-0" style="text-align: justify; white-space: pre-line;">
-                                            <?php echo htmlspecialchars($blueprint['deskripsi']); ?>
+                                            <?php echo htmlspecialchars(
+                                                $blueprint["deskripsi"],
+                                            ); ?>
                                         </p>
                                         <small class="text-muted">
                                             <i class="bi bi-calendar3 me-1"></i>
-                                            <?php echo date('d F Y', strtotime($blueprint['created_at'])); ?>
+                                            <?php echo date(
+                                                "d F Y",
+                                                strtotime(
+                                                    $blueprint["created_at"],
+                                                ),
+                                            ); ?>
                                         </small>
                                     </div>
                                 </div>
@@ -340,11 +370,15 @@ include '../includes/navbar.php';
                             <div class="card-body p-4">
                                 <div class="d-flex mb-3">
                                     <h3 class="fw-bold">
-                                        <?php echo htmlspecialchars($bp['judul']); ?>
+                                        <?php echo htmlspecialchars(
+                                            $bp["judul"],
+                                        ); ?>
                                     </h3>
                                 </div>
                                 <p class="text-muted">
-                                    <?php echo htmlspecialchars($bp['deskripsi']); ?>
+                                    <?php echo htmlspecialchars(
+                                        $bp["deskripsi"],
+                                    ); ?>
                                 </p>
                             </div>
                         </div>
@@ -355,16 +389,24 @@ include '../includes/navbar.php';
             <?php if ($pages_blueprint > 1): ?>
                 <nav aria-label="Page navigation">
                     <ul class="pagination justify-content-center mt-4">
-                        <li class="page-item <?= ($page_bp <= 1) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?product_page=<?= $page_pd ?>&blueprint_page=<?= $page_bp - 1 ?>&topic_page=<?= $page_tp ?>">&laquo; Sebelumnya</a>
+                        <li class="page-item <?= $page_bp <= 1
+                            ? "disabled"
+                            : "" ?>">
+                            <a class="page-link" href="?product_page=<?= $page_pd ?>&blueprint_page=<?= $page_bp -
+    1 ?>&topic_page=<?= $page_tp ?>">&laquo; Sebelumnya</a>
                         </li>
                         <?php for ($i = 1; $i <= $pages_blueprint; $i++): ?>
-                            <li class="page-item <?= ($page_bp == $i) ? 'active' : '' ?>">
+                            <li class="page-item <?= $page_bp == $i
+                                ? "active"
+                                : "" ?>">
                                 <a class="page-link" href="?product_page=<?= $page_pd ?>&blueprint_page=<?= $i ?>&topic_page=<?= $page_tp ?>"><?= $i ?></a>
                             </li>
                         <?php endfor; ?>
-                        <li class="page-item <?= ($page_bp >= $pages_blueprint) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?product_page=<?= $page_pd ?>&blueprint_page=<?= $page_bp + 1 ?>&topic_page=<?= $page_tp ?>">Selanjutnya &raquo;</a>
+                        <li class="page-item <?= $page_bp >= $pages_blueprint
+                            ? "disabled"
+                            : "" ?>">
+                            <a class="page-link" href="?product_page=<?= $page_pd ?>&blueprint_page=<?= $page_bp +
+    1 ?>&topic_page=<?= $page_tp ?>">Selanjutnya &raquo;</a>
                         </li>
                     </ul>
                 </nav>
@@ -394,7 +436,7 @@ include '../includes/navbar.php';
                     <div class="mt-3">
                         <div class="card border-0 shadow-sm text-center h-100 p-4">
                             <h5 class="fw mb-0">
-                                <?php echo htmlspecialchars($tp['topik']); ?>
+                                <?php echo htmlspecialchars($tp["topik"]); ?>
                             </h5>
                         </div>
                     </div>
@@ -404,16 +446,24 @@ include '../includes/navbar.php';
             <?php if ($pages_topik > 1): ?>
                 <nav aria-label="Page navigation">
                     <ul class="pagination justify-content-center mt-4">
-                        <li class="page-item <?= ($page_tp <= 1) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?product_page=<?= $page_pd ?>&blueprint_page=<?= $page_bp ?>&topic_page=<?= $page_tp - 1 ?>">&laquo; Sebelumnya</a>
+                        <li class="page-item <?= $page_tp <= 1
+                            ? "disabled"
+                            : "" ?>">
+                            <a class="page-link" href="?product_page=<?= $page_pd ?>&blueprint_page=<?= $page_bp ?>&topic_page=<?= $page_tp -
+    1 ?>">&laquo; Sebelumnya</a>
                         </li>
                         <?php for ($i = 1; $i <= $pages_topik; $i++): ?>
-                            <li class="page-item <?= ($page_tp == $i) ? 'active' : '' ?>">
+                            <li class="page-item <?= $page_tp == $i
+                                ? "active"
+                                : "" ?>">
                                 <a class="page-link" href="?product_page=<?= $page_pd ?>&blueprint_page=<?= $page_bp ?>&topic_page=<?= $i ?>"><?= $i ?></a>
                             </li>
                         <?php endfor; ?>
-                        <li class="page-item <?= ($page_tp >= $pages_topik) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?product_page=<?= $page_pd ?>&blueprint_page=<?= $page_bp ?>&topic_page=<?= $page_tp + 1 ?>">Selanjutnya &raquo;</a>
+                        <li class="page-item <?= $page_tp >= $pages_topik
+                            ? "disabled"
+                            : "" ?>">
+                            <a class="page-link" href="?product_page=<?= $page_pd ?>&blueprint_page=<?= $page_bp ?>&topic_page=<?= $page_tp +
+    1 ?>">Selanjutnya &raquo;</a>
                         </li>
                     </ul>
                 </nav>
@@ -427,4 +477,4 @@ include '../includes/navbar.php';
     </div>
 </section>
 
-<?php include '../includes/footer.php'; ?>
+<?php include __DIR__ . "/../includes/footer.php"; ?>

@@ -1,9 +1,9 @@
 <?php
-require_once '../config/db.php';
-$page_title = 'News & Events';
+require_once __DIR__ . "/../config/db.php";
+$page_title = "News & Events";
 
 // Get filter
-$kategori_filter = isset($_GET['kategori']) ? $_GET['kategori'] : '';
+$kategori_filter = isset($_GET["kategori"]) ? $_GET["kategori"] : "";
 
 // Build query
 $query = "SELECT * FROM berita WHERE 1=1";
@@ -14,7 +14,7 @@ $query .= " ORDER BY tanggal DESC";
 
 $stmt = $pdo->prepare($query);
 if ($kategori_filter) {
-    $stmt->execute(['kategori' => $kategori_filter]);
+    $stmt->execute(["kategori" => $kategori_filter]);
 } else {
     $stmt->execute();
 }
@@ -22,14 +22,14 @@ $news_list = $stmt->fetchAll();
 
 // Get single news if ID provided
 $single_news = null;
-if (isset($_GET['id'])) {
+if (isset($_GET["id"])) {
     $stmt = $pdo->prepare("SELECT * FROM berita WHERE uuid = ?");
-    $stmt->execute([$_GET['id']]);
+    $stmt->execute([$_GET["id"]]);
     $single_news = $stmt->fetch();
 }
 
-include '../includes/header.php';
-include '../includes/navbar.php';
+include __DIR__ . "/../includes/header.php";
+include __DIR__ . "/../includes/navbar.php";
 ?>
 
 <!-- Page Header -->
@@ -57,20 +57,27 @@ include '../includes/navbar.php';
                     <div class="card border-0 shadow-sm">
                         <div class="card-body p-4 p-md-5">
                             <span class="badge bg-primary mb-3 fs-6">
-                                <?php echo ucfirst($single_news['kategori']); ?>
+                                <?php echo ucfirst($single_news["kategori"]); ?>
                             </span>
 
-                            <h1 class="fw-bold mb-3"><?php echo htmlspecialchars($single_news['judul']); ?></h1>
+                            <h1 class="fw-bold mb-3"><?php echo htmlspecialchars(
+                                $single_news["judul"],
+                            ); ?></h1>
 
                             <div class="d-flex flex-wrap gap-3 text-muted mb-4">
                                 <span>
                                     <i class="bi bi-calendar me-1"></i>
-                                    <?php echo date('d F Y', strtotime($single_news['tanggal'])); ?>
+                                    <?php echo date(
+                                        "d F Y",
+                                        strtotime($single_news["tanggal"]),
+                                    ); ?>
                                 </span>
-                                <?php if ($single_news['tempat']): ?>
+                                <?php if ($single_news["tempat"]): ?>
                                     <span>
                                         <i class="bi bi-geo-alt me-1"></i>
-                                        <?php echo htmlspecialchars($single_news['tempat']); ?>
+                                        <?php echo htmlspecialchars(
+                                            $single_news["tempat"],
+                                        ); ?>
                                     </span>
                                 <?php endif; ?>
                             </div>
@@ -78,7 +85,9 @@ include '../includes/navbar.php';
                             <hr>
 
                             <div class="content" style="text-align: justify; line-height: 1.8;">
-                                <?php echo nl2br(htmlspecialchars($single_news['deskripsi'])); ?>
+                                <?php echo nl2br(
+                                    htmlspecialchars($single_news["deskripsi"]),
+                                ); ?>
                             </div>
                         </div>
                     </div>
@@ -95,16 +104,27 @@ include '../includes/navbar.php';
             <div class="row mb-4">
                 <div class="col">
                     <div class="btn-group" role="group">
-                        <a href="news.php" class="btn btn-<?php echo !$kategori_filter ? 'primary' : 'outline-primary'; ?>">
+                        <a href="news.php" class="btn btn-<?php echo !$kategori_filter
+                            ? "primary"
+                            : "outline-primary"; ?>">
                             Semua
                         </a>
-                        <a href="news.php?kategori=berita" class="btn btn-<?php echo $kategori_filter == 'berita' ? 'primary' : 'outline-primary'; ?>">
+                        <a href="news.php?kategori=berita" class="btn btn-<?php echo $kategori_filter ==
+                        "berita"
+                            ? "primary"
+                            : "outline-primary"; ?>">
                             Berita
                         </a>
-                        <a href="news.php?kategori=agenda" class="btn btn-<?php echo $kategori_filter == 'agenda' ? 'primary' : 'outline-primary'; ?>">
+                        <a href="news.php?kategori=agenda" class="btn btn-<?php echo $kategori_filter ==
+                        "agenda"
+                            ? "primary"
+                            : "outline-primary"; ?>">
                             Agenda
                         </a>
-                        <a href="news.php?kategori=pengumuman" class="btn btn-<?php echo $kategori_filter == 'pengumuman' ? 'primary' : 'outline-primary'; ?>">
+                        <a href="news.php?kategori=pengumuman" class="btn btn-<?php echo $kategori_filter ==
+                        "pengumuman"
+                            ? "primary"
+                            : "outline-primary"; ?>">
                             Pengumuman
                         </a>
                     </div>
@@ -118,31 +138,52 @@ include '../includes/navbar.php';
                         <div class="col-md-6 col-lg-4">
                             <div class="card h-100 shadow-sm border-0">
                                 <div class="card-body">
-                                    <span class="badge bg-<?php
-                                                            echo $news['kategori'] == 'agenda' ? 'success' : ($news['kategori'] == 'pengumuman' ? 'warning' : 'primary');
-                                                            ?> mb-2">
-                                        <?php echo ucfirst($news['kategori']); ?>
+                                    <span class="badge bg-<?php echo $news[
+                                        "kategori"
+                                    ] == "agenda"
+                                        ? "success"
+                                        : ($news["kategori"] == "pengumuman"
+                                            ? "warning"
+                                            : "primary"); ?> mb-2">
+                                        <?php echo ucfirst(
+                                            $news["kategori"],
+                                        ); ?>
                                     </span>
 
                                     <h5 class="card-title fw-bold">
-                                        <?php echo htmlspecialchars($news['judul']); ?>
+                                        <?php echo htmlspecialchars(
+                                            $news["judul"],
+                                        ); ?>
                                     </h5>
 
                                     <p class="text-muted small mb-3">
                                         <i class="bi bi-calendar me-2"></i>
-                                        <?php echo date('d M Y', strtotime($news['tanggal'])); ?>
-                                        <?php if ($news['tempat']): ?>
+                                        <?php echo date(
+                                            "d M Y",
+                                            strtotime($news["tanggal"]),
+                                        ); ?>
+                                        <?php if ($news["tempat"]): ?>
                                             <br>
                                             <i class="bi bi-geo-alt me-2"></i>
-                                            <?php echo htmlspecialchars($news['tempat']); ?>
+                                            <?php echo htmlspecialchars(
+                                                $news["tempat"],
+                                            ); ?>
                                         <?php endif; ?>
                                     </p>
 
                                     <p class="card-text text-muted">
-                                        <?php echo substr(htmlspecialchars($news['deskripsi']), 0, 150) . '...'; ?>
+                                        <?php echo substr(
+                                            htmlspecialchars(
+                                                $news["deskripsi"],
+                                            ),
+                                            0,
+                                            150,
+                                        ) . "..."; ?>
                                     </p>
 
-                                    <a href="news.php?id=<?php echo $news['uuid']; ?>" class="btn btn-sm btn-outline-primary">
+                                    <a href="news.php?id=<?php echo $news[
+                                        "uuid"
+                                    ]; ?>" class="btn btn-sm btn-outline-primary">
                                         Baca Selengkapnya <i class="bi bi-arrow-right"></i>
                                     </a>
                                 </div>
@@ -162,4 +203,4 @@ include '../includes/navbar.php';
     </section>
 <?php endif; ?>
 
-<?php include '../includes/footer.php'; ?>
+<?php include __DIR__ . "/../includes/footer.php"; ?>

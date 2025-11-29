@@ -1,24 +1,28 @@
 <?php
-require_once '../config/db.php';
-$page_title = 'About Us';
+require_once __DIR__ . "/../config/db.php";
+$page_title = "About Us";
 
 // Fetch profile data
 $stmt_profile = $pdo->query("SELECT * FROM profile LIMIT 1");
 $profile = $stmt_profile->fetch();
 
 // Fetch team members
-$stmt_ketua = $pdo->query("SELECT * FROM anggota WHERE jabatan = 'ketua' ORDER BY nama");
+$stmt_ketua = $pdo->query(
+    "SELECT * FROM anggota WHERE jabatan = 'ketua' ORDER BY nama",
+);
 $ketua = $stmt_ketua->fetchAll();
 
-$stmt_anggota = $pdo->query("SELECT * FROM anggota WHERE jabatan = 'anggota' ORDER BY nama");
+$stmt_anggota = $pdo->query(
+    "SELECT * FROM anggota WHERE jabatan = 'anggota' ORDER BY nama",
+);
 $anggota = $stmt_anggota->fetchAll();
 
 // Fetch facilities
 $stmt_fasilitas = $pdo->query("SELECT * FROM fasilitas ORDER BY nama");
 $fasilitas = $stmt_fasilitas->fetchAll();
 
-include '../includes/header.php';
-include '../includes/navbar.php';
+include __DIR__ . "/../includes/header.php";
+include __DIR__ . "/../includes/navbar.php";
 ?>
 
 <!-- Page Header -->
@@ -47,7 +51,9 @@ include '../includes/navbar.php';
                             <h3 class="fw-bold mb-0">Visi</h3>
                         </div>
                         <p class="text-muted mb-0 text-center">
-                            <?php echo nl2br(htmlspecialchars($profile['visi'])); ?>
+                            <?php echo nl2br(
+                                htmlspecialchars($profile["visi"]),
+                            ); ?>
                         </p>
                     </div>
                 </div>
@@ -62,19 +68,24 @@ include '../includes/navbar.php';
 
                         <?php
                         // Mengubah setiap baris menjadi poin list
-                        $misi_items = preg_split('/\r\n|\r|\n/', trim($profile['misi']));
+                        $misi_items = preg_split(
+                            '/\r\n|\r|\n/',
+                            trim($profile["misi"]),
+                        );
                         if (!empty($misi_items)) {
                             echo '<ul class="list-unstyled mb-0 text-muted">';
                             foreach ($misi_items as $item) {
-                                if (trim($item) !== '') {
+                                if (trim($item) !== "") {
                                     echo '
                                     <li class="d-flex align-items-start mb-2">
                                         <i class="bi bi-check-circle-fill text-primary me-2 mt-1"></i>
-                                        <span>' . htmlspecialchars($item) . '</span>
+                                        <span>' .
+                                        htmlspecialchars($item) .
+                                        '</span>
                                     </li>';
                                 }
                             }
-                            echo '</ul>';
+                            echo "</ul>";
                         } else {
                             echo '<p class="text-muted">Belum ada misi yang terdaftar.</p>';
                         }
@@ -87,7 +98,7 @@ include '../includes/navbar.php';
 </section>
 
     <!-- Sejarah Section -->
-    <?php if ($profile['sejarah']): ?>
+    <?php if ($profile["sejarah"]): ?>
         <section class="py-5 bg-light">
             <div class="container">
                 <div class="row">
@@ -96,7 +107,9 @@ include '../includes/navbar.php';
                         <div class="card border-0 shadow-sm">
                             <div class="card-body p-4">
                                 <p class="text-muted" style="text-align: justify;">
-                                    <?php echo nl2br(htmlspecialchars($profile['sejarah'])); ?>
+                                    <?php echo nl2br(
+                                        htmlspecialchars($profile["sejarah"]),
+                                    ); ?>
                                 </p>
                             </div>
                         </div>
@@ -133,22 +146,34 @@ include '../includes/navbar.php';
             <div class="row justify-content-center g-4">
                 <?php foreach ($ketua as $k): ?>
                 <div class="col-md-4 col-lg-3">
-                    <div class="card border-0 shadow-sm text-center h-100" data-uuid="<?php echo $k['uuid']; ?>">
+                    <div class="card border-0 shadow-sm text-center h-100" data-uuid="<?php echo $k[
+                        "uuid"
+                    ]; ?>">
                         <div class="card-body p-4">
                             <div class="mb-3">
-                                <?php if ($k['path_gambar']): ?>
-                                <img src="../assets/img/<?php echo htmlspecialchars($k['path_gambar']); ?>" alt="<?php echo htmlspecialchars($k['nama']); ?>" class="rounded-circle" style="width:120px;height:120px;object-fit:cover;">
+                                <?php if ($k["path_gambar"]): ?>
+                                <img src="../assets/img/<?php echo htmlspecialchars(
+                                    $k["path_gambar"],
+                                ); ?>" alt="<?php echo htmlspecialchars(
+    $k["nama"],
+); ?>" class="rounded-circle" style="width:120px;height:120px;object-fit:cover;">
                                 <?php else: ?>
                                 <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto" style="width:120px;height:120px;">
                                     <i class="bi bi-person-fill text-white" style="font-size:3rem;"></i>
                                 </div>
                                 <?php endif; ?>
                             </div>
-                            <h5 class="fw-bold mb-1"><?php echo htmlspecialchars($k['nama']); ?></h5>
-                            <?php if ($k['nidn']): ?>
-                            <p class="text-muted small mb-2">NIDN: <?php echo htmlspecialchars($k['nidn']); ?></p>
+                            <h5 class="fw-bold mb-1"><?php echo htmlspecialchars(
+                                $k["nama"],
+                            ); ?></h5>
+                            <?php if ($k["nidn"]): ?>
+                            <p class="text-muted small mb-2">NIDN: <?php echo htmlspecialchars(
+                                $k["nidn"],
+                            ); ?></p>
                             <?php endif; ?>
-                            <span class="badge bg-primary"><?php echo ucfirst($k['status']); ?></span>
+                            <span class="badge bg-primary"><?php echo ucfirst(
+                                $k["status"],
+                            ); ?></span>
                         </div>
                     </div>
                 </div>
@@ -159,9 +184,15 @@ include '../includes/navbar.php';
 
         <!-- Anggota Dosen  -->
         <?php if (!empty($anggota)): ?>
-        <?php 
-        $dosen = array_filter($anggota, fn($a) => strtolower($a['status']) === 'dosen');
-        $mahasiswa = array_filter($anggota, fn($a) => strtolower($a['status']) === 'mahasiswa');
+        <?php
+        $dosen = array_filter(
+            $anggota,
+            fn($a) => strtolower($a["status"]) === "dosen",
+        );
+        $mahasiswa = array_filter(
+            $anggota,
+            fn($a) => strtolower($a["status"]) === "mahasiswa",
+        );
         ?>
 
         <?php if (!empty($dosen)): ?>
@@ -170,22 +201,34 @@ include '../includes/navbar.php';
             <div class="row g-4">
                 <?php foreach ($dosen as $a): ?>
                 <div class="col-md-4 col-lg-3">
-                    <div class="card border-0 shadow-sm text-center h-100" data-uuid="<?php echo $a['uuid']; ?>">
+                    <div class="card border-0 shadow-sm text-center h-100" data-uuid="<?php echo $a[
+                        "uuid"
+                    ]; ?>">
                         <div class="card-body p-4">
                             <div class="mb-3">
-                                <?php if (!empty($a['path_gambar'])): ?>
-                                <img src="../assets/img/<?php echo htmlspecialchars($a['path_gambar']); ?>" alt="<?php echo htmlspecialchars($a['nama']); ?>" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;">
+                                <?php if (!empty($a["path_gambar"])): ?>
+                                <img src="../assets/img/<?php echo htmlspecialchars(
+                                    $a["path_gambar"],
+                                ); ?>" alt="<?php echo htmlspecialchars(
+    $a["nama"],
+); ?>" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;">
                                 <?php else: ?>
                                 <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto" style="width:100px;height:100px;">
                                     <i class="bi bi-person-fill text-white" style="font-size:2.5rem;"></i>
                                 </div>
                                 <?php endif; ?>
                             </div>
-                            <h6 class="fw-bold mb-1"><?php echo htmlspecialchars($a['nama']); ?></h6>
-                            <?php if (!empty($a['nidn'])): ?>
-                            <p class="text-muted small mb-2">NIDN: <?php echo htmlspecialchars($a['nidn']); ?></p>
+                            <h6 class="fw-bold mb-1"><?php echo htmlspecialchars(
+                                $a["nama"],
+                            ); ?></h6>
+                            <?php if (!empty($a["nidn"])): ?>
+                            <p class="text-muted small mb-2">NIDN: <?php echo htmlspecialchars(
+                                $a["nidn"],
+                            ); ?></p>
                             <?php endif; ?>
-                            <span class="badge bg-secondary"><?php echo ucfirst($a['status']); ?></span>
+                            <span class="badge bg-secondary"><?php echo ucfirst(
+                                $a["status"],
+                            ); ?></span>
                         </div>
                     </div>
                 </div>
@@ -193,7 +236,7 @@ include '../includes/navbar.php';
             </div>
         </div>
         <?php endif; ?>
-        
+
         <!-- Anggota Mahasiswa -->
         <?php if (!empty($mahasiswa)): ?>
         <div>
@@ -201,22 +244,34 @@ include '../includes/navbar.php';
             <div class="row g-4">
                 <?php foreach ($mahasiswa as $a): ?>
                 <div class="col-md-4 col-lg-3">
-                    <div class="card border-0 shadow-sm text-center h-100" data-uuid="<?php echo $a['uuid']; ?>">
+                    <div class="card border-0 shadow-sm text-center h-100" data-uuid="<?php echo $a[
+                        "uuid"
+                    ]; ?>">
                         <div class="card-body p-4">
                             <div class="mb-3">
-                                <?php if (!empty($a['path_gambar'])): ?>
-                                <img src="../assets/img/<?php echo htmlspecialchars($a['path_gambar']); ?>" alt="<?php echo htmlspecialchars($a['nama']); ?>" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;">
+                                <?php if (!empty($a["path_gambar"])): ?>
+                                <img src="../assets/img/<?php echo htmlspecialchars(
+                                    $a["path_gambar"],
+                                ); ?>" alt="<?php echo htmlspecialchars(
+    $a["nama"],
+); ?>" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;">
                                 <?php else: ?>
                                 <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto" style="width:100px;height:100px;">
                                     <i class="bi bi-person-fill text-white" style="font-size:2.5rem;"></i>
                                 </div>
                                 <?php endif; ?>
                             </div>
-                            <h6 class="fw-bold mb-1"><?php echo htmlspecialchars($a['nama']); ?></h6>
-                            <?php if (!empty($a['nidn'])): ?>
-                            <p class="text-muted small mb-2">NIDN: <?php echo htmlspecialchars($a['nidn']); ?></p>
+                            <h6 class="fw-bold mb-1"><?php echo htmlspecialchars(
+                                $a["nama"],
+                            ); ?></h6>
+                            <?php if (!empty($a["nidn"])): ?>
+                            <p class="text-muted small mb-2">NIDN: <?php echo htmlspecialchars(
+                                $a["nidn"],
+                            ); ?></p>
                             <?php endif; ?>
-                            <span class="badge bg-secondary"><?php echo ucfirst($a['status']); ?></span>
+                            <span class="badge bg-secondary"><?php echo ucfirst(
+                                $a["status"],
+                            ); ?></span>
                         </div>
                     </div>
                 </div>
@@ -291,22 +346,32 @@ include '../includes/navbar.php';
                 <?php foreach ($fasilitas as $fas): ?>
                     <div class="col-md-6 col-lg-4">
                         <div class="card h-100 border-0 shadow-sm">
-                            <?php if ($fas['path_gambar']): ?>
-                                <img src="../assets/img/<?php echo htmlspecialchars($fas['path_gambar']); ?>"
+                            <?php if ($fas["path_gambar"]): ?>
+                                <img src="../assets/img/<?php echo htmlspecialchars(
+                                    $fas["path_gambar"],
+                                ); ?>"
                                     class="card-img-top"
-                                    alt="<?php echo htmlspecialchars($fas['nama']); ?>"
+                                    alt="<?php echo htmlspecialchars(
+                                        $fas["nama"],
+                                    ); ?>"
                                     style="height: 200px; object-fit: cover;">
                             <?php endif; ?>
                             <div class="card-body">
-                                <h5 class="card-title fw-bold"><?php echo htmlspecialchars($fas['nama']); ?></h5>
-                                <?php if ($fas['kuantitas']): ?>
+                                <h5 class="card-title fw-bold"><?php echo htmlspecialchars(
+                                    $fas["nama"],
+                                ); ?></h5>
+                                <?php if ($fas["kuantitas"]): ?>
                                     <p class="text-muted small">
                                         <i class="bi bi-box me-1"></i>
-                                        Jumlah: <?php echo $fas['kuantitas']; ?> unit
+                                        Jumlah: <?php echo $fas[
+                                            "kuantitas"
+                                        ]; ?> unit
                                     </p>
                                 <?php endif; ?>
                                 <p class="card-text text-muted">
-                                    <?php echo htmlspecialchars($fas['deskripsi']); ?>
+                                    <?php echo htmlspecialchars(
+                                        $fas["deskripsi"],
+                                    ); ?>
                                 </p>
                             </div>
                         </div>
@@ -317,4 +382,4 @@ include '../includes/navbar.php';
     </section>
 <?php endif; ?>
 
-<?php include '../includes/footer.php'; ?>
+<?php include __DIR__ . "/../includes/footer.php"; ?>
