@@ -19,9 +19,11 @@ if (isset($_GET["delete"])) {
         if (
             $member &&
             $member["path_gambar"] &&
-            file_exists("../assets/img/" . $member["path_gambar"])
+            file_exists(
+                dirname(__DIR__) . "/assets/img/" . $member["path_gambar"],
+            )
         ) {
-            unlink("../assets/img/" . $member["path_gambar"]);
+            unlink(dirname(__DIR__) . "/assets/img/" . $member["path_gambar"]);
         }
 
         $stmt = $pdo->prepare("DELETE FROM anggota WHERE uuid = ?");
@@ -95,9 +97,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if (
                         $old &&
                         $old["path_gambar"] &&
-                        file_exists("../assets/img/" . $old["path_gambar"])
+                        file_exists(
+                            dirname(__DIR__) .
+                                "/assets/img/" .
+                                $old["path_gambar"],
+                        )
                     ) {
-                        unlink("../assets/img/" . $old["path_gambar"]);
+                        unlink(
+                            dirname(__DIR__) .
+                                "/assets/img/" .
+                                $old["path_gambar"],
+                        );
                     }
                 }
 
@@ -244,9 +254,9 @@ if (isset($_SESSION["flash_error"])) {
 
                     <?php if ($edit_data && $edit_data["path_gambar"]): ?>
                         <div class="mt-2">
-                            <img src="../assets/img/<?php echo htmlspecialchars(
-                                $edit_data["path_gambar"],
-                            ); ?>"
+                            <img src=<?php echo dirname(__DIR__) .
+                                "/assets/img/" .
+                                htmlspecialchars($edit_data["path_gambar"]); ?>"
                                 id="preview"
                                 class="img-thumbnail rounded-circle"
                                 style="width: 120px; height: 120px; object-fit: cover;">
@@ -316,9 +326,13 @@ if (isset($_SESSION["flash_error"])) {
                                     <td><?php echo $index + 1; ?></td>
                                     <td>
                                         <?php if ($member["path_gambar"]): ?>
-                                            <img src="../assets/img/<?php echo htmlspecialchars(
-                                                $member["path_gambar"],
-                                            ); ?>"
+                                            <img src="<?php echo dirname(
+                                                __DIR__,
+                                            ) .
+                                                "/assets/img/" .
+                                                htmlspecialchars(
+                                                    $member["path_gambar"],
+                                                ); ?>"
                                                 class="rounded-circle"
                                                 width="50"
                                                 height="50"

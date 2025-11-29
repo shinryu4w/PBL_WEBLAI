@@ -21,9 +21,13 @@ if (isset($_GET["delete"])) {
         if (
             $facility &&
             $facility["path_gambar"] &&
-            file_exists("../assets/img/" . $facility["path_gambar"])
+            file_exists(
+                dirname(__DIR__) . "/assets/img/" . $facility["path_gambar"],
+            )
         ) {
-            unlink("../assets/img/" . $facility["path_gambar"]);
+            unlink(
+                dirname(__DIR__) . "/assets/img/" . $facility["path_gambar"],
+            );
         }
 
         $stmt = $pdo->prepare("DELETE FROM fasilitas WHERE uuid = ?");
@@ -76,9 +80,17 @@ if (
                     if (
                         $old &&
                         $old["path_gambar"] &&
-                        file_exists("../assets/img/" . $old["path_gambar"])
+                        file_exists(
+                            dirname(__DIR__) .
+                                "/assets/img/" .
+                                $old["path_gambar"],
+                        )
                     ) {
-                        unlink("../assets/img/" . $old["path_gambar"]);
+                        unlink(
+                            dirname(__DIR__) .
+                                "/assets/img/" .
+                                $old["path_gambar"],
+                        );
                     }
                 }
 
@@ -237,9 +249,9 @@ if (isset($_GET["edit"])) {
 
                     <?php if ($edit_data && $edit_data["path_gambar"]): ?>
                         <div class="mt-2">
-                            <img src="../assets/img/<?php echo htmlspecialchars(
-                                $edit_data["path_gambar"],
-                            ); ?>"
+                            <img src=<?php echo dirname(__DIR__) .
+                                "/assets/img/" .
+                                htmlspecialchars($edit_data["path_gambar"]); ?>"
                                 id="preview"
                                 class="img-thumbnail"
                                 style="max-width: 300px;">
@@ -313,9 +325,13 @@ if (isset($_GET["edit"])) {
                                     <td><?php echo $index + 1; ?></td>
                                     <td>
                                         <?php if ($facility["path_gambar"]): ?>
-                                            <img src="../assets/img/<?php echo htmlspecialchars(
-                                                $facility["path_gambar"],
-                                            ); ?>"
+                                            <img src=<?php echo dirname(
+                                                __DIR__,
+                                            ) .
+                                                "/assets/img/" .
+                                                htmlspecialchars(
+                                                    $facility["path_gambar"],
+                                                ); ?>"
                                                 alt="<?php echo htmlspecialchars(
                                                     $facility["nama"],
                                                 ); ?>"

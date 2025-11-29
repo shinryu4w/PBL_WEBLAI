@@ -21,9 +21,13 @@ if (isset($_GET["delete_gallery"])) {
         foreach ($photos as $photo) {
             if (
                 $photo["path_gambar"] &&
-                file_exists("../assets/img/" . $photo["path_gambar"])
+                file_exists(
+                    dirname(__DIR__) . "/assets/img/" . $photo["path_gambar"],
+                )
             ) {
-                unlink("../assets/img/" . $photo["path_gambar"]);
+                unlink(
+                    dirname(__DIR__) . "/assets/img/" . $photo["path_gambar"],
+                );
             }
         }
 
@@ -52,9 +56,11 @@ if (isset($_GET["delete_photo"])) {
         if (
             $photo &&
             $photo["path_gambar"] &&
-            file_exists("../assets/img/" . $photo["path_gambar"])
+            file_exists(
+                dirname(__DIR__) . "/assets/img/" . $photo["path_gambar"],
+            )
         ) {
-            unlink("../assets/img/" . $photo["path_gambar"]);
+            unlink(dirname(__DIR__) . "/assets/img/" . $photo["path_gambar"]);
         }
 
         $stmt = $pdo->prepare("DELETE FROM foto WHERE uuid = ?");
@@ -162,12 +168,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["action"])) {
                             // Jika gagal simpan ke database, hapus file yang sudah diupload
                             if (
                                 file_exists(
-                                    "../assets/img/" .
+                                    dirname(__DIR__) .
+                                        "/assets/img/" .
                                         $upload_result["filename"],
                                 )
                             ) {
                                 unlink(
-                                    "../assets/img/" .
+                                    dirname(__DIR__) .
+                                        "/assets/img/" .
                                         $upload_result["filename"],
                                 );
                             }
@@ -311,14 +319,20 @@ if (isset($_SESSION["flash_error"])) {
                         <?php foreach ($view_photos as $photo): ?>
                             <div class="col-6 col-md-4 col-lg-3 col-xl-2">
                                 <div class="card h-100">
-                                    <img src="../assets/img/<?php echo htmlspecialchars(
-                                        $photo["path_gambar"],
-                                    ); ?>"
+                                    <img src=<?php echo dirname(__DIR__) .
+                                        "/assets/img/" .
+                                        htmlspecialchars(
+                                            $photo["path_gambar"],
+                                        ); ?>"
                                         class="card-img-top"
                                         style="height: 150px; object-fit: cover; cursor: pointer;"
-                                        onclick="window.open('../assets/img/<?php echo htmlspecialchars(
-                                            $photo["path_gambar"],
-                                        ); ?>', '_blank')">
+                                        onclick="window.open('<?php echo dirname(
+                                            __DIR__,
+                                        ) .
+                                            "/assets/img/" .
+                                            htmlspecialchars(
+                                                $photo["path_gambar"],
+                                            ); ?>', '_blank')">
                                     <div class="card-body p-2 text-center">
                                         <a href="?delete_photo=<?php echo $photo[
                                             "uuid"
@@ -467,9 +481,13 @@ if (isset($_SESSION["flash_error"])) {
                                                 $cover &&
                                                 $cover["path_gambar"]
                                             ): ?>
-                                                <img src="../assets/img/<?php echo htmlspecialchars(
-                                                    $cover["path_gambar"],
-                                                ); ?>"
+                                                <img src=<?php echo dirname(
+                                                    __DIR__,
+                                                ) .
+                                                    "/assets/img/" .
+                                                    htmlspecialchars(
+                                                        $cover["path_gambar"],
+                                                    ); ?>
                                                     style="width: 80px; height: 60px; object-fit: cover; border-radius: 5px;">
                                             <?php else: ?>
                                                 <div class="bg-light d-flex align-items-center justify-content-center"

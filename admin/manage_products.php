@@ -19,9 +19,11 @@ if (isset($_GET["delete"])) {
         if (
             $product &&
             $product["path_gambar"] &&
-            file_exists("../assets/img/" . $product["path_gambar"])
+            file_exists(
+                dirname(__DIR__) . "/assets/img/" . $product["path_gambar"],
+            )
         ) {
-            unlink("../assets/img/" . $product["path_gambar"]);
+            unlink(dirname(__DIR__) . "/assets/img/" . $product["path_gambar"]);
         }
 
         $stmt = $pdo->prepare("DELETE FROM produk WHERE uuid = ?");
@@ -74,9 +76,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if (
                         $old &&
                         $old["path_gambar"] &&
-                        file_exists("../assets/img/" . $old["path_gambar"])
+                        file_exists(
+                            dirname(__DIR__) .
+                                "/assets/img/" .
+                                $old["path_gambar"],
+                        )
                     ) {
-                        unlink("../assets/img/" . $old["path_gambar"]);
+                        unlink(
+                            dirname(__DIR__) .
+                                "/assets/img/" .
+                                $old["path_gambar"],
+                        );
                     }
                 }
 
@@ -264,9 +274,9 @@ if (isset($_SESSION["flash_error"])) {
 
                     <?php if ($edit_data && $edit_data["path_gambar"]): ?>
                         <div class="mt-2">
-                            <img src="../assets/img/<?php echo htmlspecialchars(
-                                $edit_data["path_gambar"],
-                            ); ?>"
+                            <img src=<?php echo dirname(__DIR__) .
+                                "/assets/img/" .
+                                htmlspecialchars($edit_data["path_gambar"]); ?>"
                                 id="preview" class="img-thumbnail" style="max-width: 300px;">
                         </div>
                     <?php else: ?>
@@ -333,9 +343,11 @@ if (isset($_SESSION["flash_error"])) {
                                     <td><?php echo $index + 1; ?></td>
                                     <td>
                                         <?php if ($product["path_gambar"]): ?>
-                                            <img src="../assets/img/<?php echo htmlspecialchars(
-                                                $product["path_gambar"],
-                                            ); ?>"
+                                            <img src=<?php dirname(__DIR__) .
+                                                "/assets/img/" .
+                                                htmlspecialchars(
+                                                    $product["path_gambar"],
+                                                ); ?>"
                                                 style="width: 80px; height: 60px; object-fit: cover; border-radius: 5px;">
                                         <?php else: ?>
                                             <div class="bg-light d-flex align-items-center justify-content-center"

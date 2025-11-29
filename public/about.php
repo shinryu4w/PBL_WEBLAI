@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/config/db.php";
+require_once dirname(__DIR__) . "/config/db.php";
 $page_title = "About Us";
 
 // Fetch profile data
@@ -21,8 +21,8 @@ $anggota = $stmt_anggota->fetchAll();
 $stmt_fasilitas = $pdo->query("SELECT * FROM fasilitas ORDER BY nama");
 $fasilitas = $stmt_fasilitas->fetchAll();
 
-include __DIR__ . "/includes/header.php";
-include __DIR__ . "/includes/navbar.php";
+include dirname(__DIR__) . "/includes/header.php";
+include dirname(__DIR__) . "/includes/navbar.php";
 ?>
 
 <!-- Page Header -->
@@ -207,9 +207,11 @@ include __DIR__ . "/includes/navbar.php";
                         <div class="card-body p-4">
                             <div class="mb-3">
                                 <?php if (!empty($a["path_gambar"])): ?>
-                                <img src="../assets/img/<?php echo htmlspecialchars(
-                                    $a["path_gambar"],
-                                ); ?>" alt="<?php echo htmlspecialchars(
+                                <img src=<?php echo dirname(__DIR__) .
+                                    "/assets/img/" .
+                                    htmlspecialchars(
+                                        $a["path_gambar"],
+                                    ); ?>" alt="<?php echo htmlspecialchars(
     $a["nama"],
 ); ?>" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;">
                                 <?php else: ?>
@@ -250,9 +252,11 @@ include __DIR__ . "/includes/navbar.php";
                         <div class="card-body p-4">
                             <div class="mb-3">
                                 <?php if (!empty($a["path_gambar"])): ?>
-                                <img src="../assets/img/<?php echo htmlspecialchars(
-                                    $a["path_gambar"],
-                                ); ?>" alt="<?php echo htmlspecialchars(
+                                <img src=<?php echo dirname(__DIR__) .
+                                    "/assets/img/" .
+                                    htmlspecialchars(
+                                        $a["path_gambar"],
+                                    ); ?>" alt="<?php echo htmlspecialchars(
     $a["nama"],
 ); ?>" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;">
                                 <?php else: ?>
@@ -382,4 +386,4 @@ include __DIR__ . "/includes/navbar.php";
     </section>
 <?php endif; ?>
 
-<?php include __DIR__ . "/includes/footer.php"; ?>
+<?php include dirname(__DIR__) . "/includes/footer.php"; ?>

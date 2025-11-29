@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/config/db.php";
+require_once dirname(__DIR__) . "/config/db.php";
 $page_title = "Publications";
 
 // Pagination setup
@@ -77,8 +77,8 @@ foreach ($publications as $pub) {
 }
 krsort($publications_by_year);
 
-include __DIR__ . "/includes/header.php";
-include __DIR__ . "/includes/navbar.php";
+include dirname(__DIR__) . "/includes/header.php";
+include dirname(__DIR__) . "/includes/navbar.php";
 ?>
 
 <!-- Page Header -->
@@ -110,6 +110,7 @@ include __DIR__ . "/includes/navbar.php";
                                 <?php // Menampilkan 5 pubs per tahun
                         // Menampilkan 5 pubs per tahun
                         // Menampilkan 5 pubs per tahun
+                                // Menampilkan 5 pubs per tahun
                                 $pubs_year = $filter_year
                                     ? $pubs
                                     : array_slice($pubs, 0, 5); ?>
@@ -300,4 +301,4 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 
-<?php include __DIR__ . "/includes/footer.php"; ?>
+<?php include dirname(__DIR__) . "/includes/footer.php"; ?>

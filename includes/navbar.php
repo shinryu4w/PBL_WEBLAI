@@ -1,11 +1,11 @@
 <?php
-$current_page = basename($_SERVER['PHP_SELF'], '.php');
-?>
+$current_page = basename($_SERVER["PHP_SELF"], ".php"); ?>
 
 <nav class="navbar navbar-expand-lg navbar-light sticky-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="index.php">
-            <img src="../assets/img/logo.png" alt="Logo AI Lab" class="navbar-logo">
+            <img src=<?php echo dirname(__DIR__) .
+                "/assets/img/logo.png"; ?> alt="Logo AI Lab" class="navbar-logo">
             <span class="navbar-logo-text">AI Lab Polinema</span>
         </a>
 
@@ -16,37 +16,52 @@ $current_page = basename($_SERVER['PHP_SELF'], '.php');
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link <?php echo $current_page == 'index' ? 'active' : ''; ?>" href="index.php">
+                    <a class="nav-link <?php echo $current_page == "index"
+                        ? "active"
+                        : ""; ?>" href="index.php">
                         <i class="bi bi-house-door me-1"></i>Home
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php echo $current_page == 'about' ? 'active' : ''; ?>" href="about.php">
+                    <a class="nav-link <?php echo $current_page == "about"
+                        ? "active"
+                        : ""; ?>" href="about.php">
                         <i class="bi bi-info-circle me-1"></i>About
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php echo $current_page == 'research' ? 'active' : ''; ?>" href="research.php">
+                    <a class="nav-link <?php echo $current_page == "research"
+                        ? "active"
+                        : ""; ?>" href="research.php">
                         <i class="bi bi-lightbulb me-1"></i>Research
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php echo $current_page == 'publications' ? 'active' : ''; ?>" href="publications.php">
+                    <a class="nav-link <?php echo $current_page ==
+                    "publications"
+                        ? "active"
+                        : ""; ?>" href="publications.php">
                         <i class="bi bi-journal-text me-1"></i>Publications
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php echo $current_page == 'gallery' ? 'active' : ''; ?>" href="gallery.php">
+                    <a class="nav-link <?php echo $current_page == "gallery"
+                        ? "active"
+                        : ""; ?>" href="gallery.php">
                         <i class="bi bi-images me-1"></i>Gallery
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php echo $current_page == 'news' ? 'active' : ''; ?>" href="news.php">
+                    <a class="nav-link <?php echo $current_page == "news"
+                        ? "active"
+                        : ""; ?>" href="news.php">
                         <i class="bi bi-newspaper me-1"></i>News
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php echo $current_page == 'contact' ? 'active' : ''; ?>" href="contact.php">
+                    <a class="nav-link <?php echo $current_page == "contact"
+                        ? "active"
+                        : ""; ?>" href="contact.php">
                         <i class="bi bi-envelope me-1"></i>Contact
                     </a>
                 </li>

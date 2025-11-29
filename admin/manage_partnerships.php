@@ -20,9 +20,9 @@ if (isset($_GET["delete"])) {
         if (
             $partner &&
             $partner["logo"] &&
-            file_exists("../assets/img/" . $partner["logo"])
+            file_exists(dirname(__DIR__) . "/assets/img/" . $partner["logo"])
         ) {
-            unlink("../assets/img/" . $partner["logo"]);
+            unlink(dirname(__DIR__) . "/assets/img/" . $partner["logo"]);
         }
 
         $stmt = $pdo->prepare("DELETE FROM partnership WHERE uuid = ?");
@@ -76,9 +76,13 @@ if (
                     if (
                         $old &&
                         $old["logo"] &&
-                        file_exists("../assets/img/" . $old["logo"])
+                        file_exists(
+                            dirname(__DIR__) . "/assets/img/" . $old["logo"],
+                        )
                     ) {
-                        unlink("../assets/img/" . $old["logo"]);
+                        unlink(
+                            dirname(__DIR__) . "/assets/img/" . $old["logo"],
+                        );
                     }
                 }
 
@@ -221,9 +225,9 @@ if (isset($_SESSION["flash_error"])) {
 
                     <?php if ($edit_data && $edit_data["logo"]): ?>
                         <div class="mt-2 p-3 bg-light text-center rounded">
-                            <img src="../assets/img/<?php echo htmlspecialchars(
-                                $edit_data["logo"],
-                            ); ?>"
+                            <img src=<?php echo dirname(__DIR__) .
+                                "/assets/img/" .
+                                htmlspecialchars($edit_data["logo"]); ?>"
                                 id="preview"
                                 class="img-thumbnail"
                                 style="max-height: 100px; max-width: 200px; object-fit: contain;">
@@ -298,9 +302,13 @@ if (isset($_SESSION["flash_error"])) {
                                     <td><?php echo $index + 1; ?></td>
                                     <td>
                                         <?php if ($partner["logo"]): ?>
-                                            <img src="../assets/img/<?php echo htmlspecialchars(
-                                                $partner["logo"],
-                                            ); ?>"
+                                            <img src=<?php echo dirname(
+                                                __DIR__,
+                                            ) .
+                                                "/assets/img/" .
+                                                htmlspecialchars(
+                                                    $partner["logo"],
+                                                ); ?>"
                                                 alt="<?php echo htmlspecialchars(
                                                     $partner["nama"],
                                                 ); ?>"

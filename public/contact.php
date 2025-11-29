@@ -2,9 +2,9 @@
 session_start();
 ob_start();
 
-require_once __DIR__ . "/config/db.php";
-require_once __DIR__ . "/helpers/sanitize.php";
-require __DIR__ . "/config/mail.php";
+require_once dirname(__DIR__) . "/config/db.php";
+require_once dirname(__DIR__) . "/helpers/sanitize.php";
+require dirname(__DIR__) . "/config/mail.php";
 
 $page_title = "Contact Us";
 
@@ -278,7 +278,7 @@ include __DIR__ . "/includes/navbar.php";
 </script>
 
 <?php
-include __DIR__ . "/includes/footer.php";
+include dirname(__DIR__) . "/includes/footer.php";
 ob_end_flush();
 
 

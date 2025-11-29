@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/config/db.php";
+require_once dirname(__DIR__) . "/config/db.php";
 $page_title = "Gallery";
 
 // Get galleries with photo count
@@ -12,8 +12,8 @@ $stmt = $pdo->query("
 ");
 $galleries = $stmt->fetchAll();
 
-include __DIR__ . "/includes/header.php";
-include __DIR__ . "/includes/navbar.php";
+include dirname(__DIR__) . "/includes/header.php";
+include dirname(__DIR__) . "/includes/navbar.php";
 ?>
 
 <!-- Page Header -->
@@ -69,9 +69,11 @@ include __DIR__ . "/includes/navbar.php";
                             <?php foreach ($photos as $photo): ?>
                                 <div class="col-6 col-md-4 col-lg-3">
                                     <div class="card border-0 shadow-sm h-100">
-                                        <img src="../assets/img/<?php echo htmlspecialchars(
-                                            $photo["path_gambar"],
-                                        ); ?>"
+                                        <img src=<?php echo dirname(__DIR__) .
+                                            "/assets/img/" .
+                                            htmlspecialchars(
+                                                $photo["path_gambar"],
+                                            ); ?>"
                                             class="card-img-top gallery-img"
                                             alt="Gallery Photo"
                                             style="height: 200px; object-fit: cover; cursor: pointer;"
@@ -96,9 +98,15 @@ include __DIR__ . "/includes/navbar.php";
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body p-0">
-                                                    <img src="../assets/img/<?php echo htmlspecialchars(
-                                                        $photo["path_gambar"],
-                                                    ); ?>"
+                                                    <img src=<?php dirname(
+                                                        __DIR__,
+                                                    ) .
+                                                        "/assets/img/" .
+                                                        htmlspecialchars(
+                                                            $photo[
+                                                                "path_gambar"
+                                                            ],
+                                                        ); ?>"
                                                         class="img-fluid w-100"
                                                         alt="Gallery Photo">
                                                 </div>
@@ -139,4 +147,4 @@ include __DIR__ . "/includes/navbar.php";
     }
 </style>
 
-<?php include __DIR__ . "/includes/footer.php"; ?>
+<?php include dirname(__DIR__) . "/includes/footer.php"; ?>
