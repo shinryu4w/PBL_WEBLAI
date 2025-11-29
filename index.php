@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . "/config/db.php";
+
 $page_title = "Home";
 
 // Fetch dashboard background
@@ -14,7 +15,7 @@ if ($dashboard_bg && $dashboard_bg["path_gambar"]) {
         htmlspecialchars($dashboard_bg["path_gambar"]);
 }
 
-// Fetch latest news
+/// sadasdasdas
 $stmt_berita = $pdo->query(
     "SELECT * FROM berita ORDER BY tanggal DESC LIMIT 3",
 );
