@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/../config/db.php";
+require_once __DIR__ . "/config/db.php";
 $page_title = "Gallery";
 
 // Get galleries with photo count
@@ -12,8 +12,8 @@ $stmt = $pdo->query("
 ");
 $galleries = $stmt->fetchAll();
 
-include __DIR__ . "/../includes/header.php";
-include __DIR__ . "/../includes/navbar.php";
+include __DIR__ . "/includes/header.php";
+include __DIR__ . "/includes/navbar.php";
 ?>
 
 <!-- Page Header -->
@@ -139,4 +139,4 @@ include __DIR__ . "/../includes/navbar.php";
     }
 </style>
 
-<?php include __DIR__ . "/../includes/footer.php"; ?>
+<?php include __DIR__ . "/includes/footer.php"; ?>

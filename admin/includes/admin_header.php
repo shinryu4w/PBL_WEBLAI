@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . "/../../config/db.php";
-require_once __DIR__ . "/../../helpers/sanitize.php";
-require_once __DIR__ . "/../../helpers/upload.php";
+require_once __DIR__ . "/config/db.php";
+require_once __DIR__ . "/helpers/sanitize.php";
+require_once __DIR__ . "/helpers/upload.php";
 require_once __DIR__ . "/auth.php";
 
 // Cek login dan session timeout

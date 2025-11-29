@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/../config/db.php";
+require_once __DIR__ . "/config/db.php";
 $page_title = "Research & Products";
 
 // data produk
@@ -58,8 +58,8 @@ $rows_topik = $count_stmt_tp->fetchColumn();
 $pages_topik = ceil($rows_topik / $limit_tp);
 $topik = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-include __DIR__ . "/../includes/header.php";
-include __DIR__ . "/../includes/navbar.php";
+include __DIR__ . "/includes/header.php";
+include __DIR__ . "/includes/navbar.php";
 ?>
 
 <!-- Page Header -->
@@ -477,4 +477,4 @@ include __DIR__ . "/../includes/navbar.php";
     </div>
 </section>
 
-<?php include __DIR__ . "/../includes/footer.php"; ?>
+<?php include __DIR__ . "/includes/footer.php"; ?>
