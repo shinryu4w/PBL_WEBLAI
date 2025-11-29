@@ -2,8 +2,8 @@
 require_once dirname(__DIR__) . "/vendor/autoload.php";
 
 // Load .env
-$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
-$dotenv->load();
+// $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+// $dotenv->load();
 
 try {
     $dsn = "pgsql:host={$_ENV["DB_HOST"]};port={$_ENV["DB_PORT"]};dbname={$_ENV["DB_NAME"]}";
