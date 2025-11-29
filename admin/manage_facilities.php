@@ -249,8 +249,7 @@ if (isset($_GET["edit"])) {
 
                     <?php if ($edit_data && $edit_data["path_gambar"]): ?>
                         <div class="mt-2">
-                            <img src=<?php echo dirname(__DIR__) .
-                                "/assets/img/" .
+                            <img src=<?php echo "../assets/img/" .
                                 htmlspecialchars($edit_data["path_gambar"]); ?>"
                                 id="preview"
                                 class="img-thumbnail"
@@ -325,10 +324,7 @@ if (isset($_GET["edit"])) {
                                     <td><?php echo $index + 1; ?></td>
                                     <td>
                                         <?php if ($facility["path_gambar"]): ?>
-                                            <img src=<?php echo dirname(
-                                                __DIR__,
-                                            ) .
-                                                "/assets/img/" .
+                                            <img src=<?php echo "../assets/img/" .
                                                 htmlspecialchars(
                                                     $facility["path_gambar"],
                                                 ); ?>"

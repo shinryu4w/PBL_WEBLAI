@@ -69,18 +69,19 @@ include dirname(__DIR__) . "/includes/navbar.php";
                             <?php foreach ($photos as $photo): ?>
                                 <div class="col-6 col-md-4 col-lg-3">
                                     <div class="card border-0 shadow-sm h-100">
-                                        <img src=<?php echo dirname(__DIR__) .
-                                            "/assets/img/" .
-                                            htmlspecialchars(
-                                                $photo["path_gambar"],
-                                            ); ?>"
+                                        <img
+                                            src="<?php echo "../assets/img/" .
+                                                htmlspecialchars(
+                                                    $photo["path_gambar"],
+                                                ); ?>"
                                             class="card-img-top gallery-img"
                                             alt="Gallery Photo"
                                             style="height: 200px; object-fit: cover; cursor: pointer;"
                                             data-bs-toggle="modal"
                                             data-bs-target="#imageModal<?php echo $index .
                                                 "_" .
-                                                $photo["uuid"]; ?>">
+                                                $photo["uuid"]; ?>"
+                                        >
                                     </div>
 
                                     <!-- Modal for full image -->
@@ -98,17 +99,16 @@ include dirname(__DIR__) . "/includes/navbar.php";
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body p-0">
-                                                    <img src=<?php dirname(
-                                                        __DIR__,
-                                                    ) .
-                                                        "/assets/img/" .
-                                                        htmlspecialchars(
-                                                            $photo[
-                                                                "path_gambar"
-                                                            ],
-                                                        ); ?>"
+                                                    <img
+                                                        src="<?php echo "../assets/img/" .
+                                                            htmlspecialchars(
+                                                                $photo[
+                                                                    "path_gambar"
+                                                                ],
+                                                            ); ?>"
                                                         class="img-fluid w-100"
-                                                        alt="Gallery Photo">
+                                                        alt="Gallery Photo"
+                                                    >
                                                 </div>
                                             </div>
                                         </div>

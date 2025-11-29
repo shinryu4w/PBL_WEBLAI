@@ -115,8 +115,7 @@ include dirname(__DIR__) . "/includes/navbar.php";
                 </div>
             </div>
             <div class="col-lg-6">
-                <img src=<?php echo dirname(__DIR__) .
-                    "/assets/img/hero-illustration.svg"; ?> alt="AI Lab" class="img-fluid"
+                <img src="../assets/img/hero-illustration.svg" alt="AI Lab" class="img-fluid"
                     onerror="this.src='https://via.placeholder.com/600x400/1E4BA3/ffffff?text=AI+Lab+Polinema'">
             </div>
         </div>
@@ -366,9 +365,8 @@ include dirname(__DIR__) . "/includes/navbar.php";
                                 $partner["nama"],
                             ); ?>">
                             <?php if ($partner["logo"]): ?>
-                                <img src=<?php echo dirname(__DIR__) .
-                                    "/assets/img/" .
-                                    htmlspecialchars($partner["logo"]); ?>"
+                                <img src="../assets/img/" .
+                                    echo htmlspecialchars($partner["logo"]); ?>"
                                     alt="<?php echo htmlspecialchars(
                                         $partner["nama"],
                                     ); ?>"

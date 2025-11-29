@@ -6,7 +6,7 @@ include __DIR__ . "/includes/admin_header.php";
 
 $success = "";
 $error = "";
-$upload_dir = dirname(__DIR__) . "/assets/img/dashboard/";
+$upload_dir = "/assets/img/dashboard/";
 
 // Create directory if not exists
 if (!file_exists($upload_dir)) {

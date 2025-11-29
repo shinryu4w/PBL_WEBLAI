@@ -319,17 +319,13 @@ if (isset($_SESSION["flash_error"])) {
                         <?php foreach ($view_photos as $photo): ?>
                             <div class="col-6 col-md-4 col-lg-3 col-xl-2">
                                 <div class="card h-100">
-                                    <img src=<?php echo dirname(__DIR__) .
-                                        "/assets/img/" .
+                                    <img src=<?php echo "../assets/img/" .
                                         htmlspecialchars(
                                             $photo["path_gambar"],
                                         ); ?>"
                                         class="card-img-top"
                                         style="height: 150px; object-fit: cover; cursor: pointer;"
-                                        onclick="window.open('<?php echo dirname(
-                                            __DIR__,
-                                        ) .
-                                            "/assets/img/" .
+                                        onclick="window.open('<?php echo "../assets/img/" .
                                             htmlspecialchars(
                                                 $photo["path_gambar"],
                                             ); ?>', '_blank')">
@@ -481,10 +477,7 @@ if (isset($_SESSION["flash_error"])) {
                                                 $cover &&
                                                 $cover["path_gambar"]
                                             ): ?>
-                                                <img src=<?php echo dirname(
-                                                    __DIR__,
-                                                ) .
-                                                    "/assets/img/" .
+                                                <img src=<?php echo "../assets/img/" .
                                                     htmlspecialchars(
                                                         $cover["path_gambar"],
                                                     ); ?>

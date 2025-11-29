@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/config/db.php";
+require_once dirname(__DIR__) . "/config/db.php";
 $page_title = "Research & Products";
 
 // data produk

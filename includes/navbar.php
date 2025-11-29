@@ -4,8 +4,7 @@ $current_page = basename($_SERVER["PHP_SELF"], ".php"); ?>
 <nav class="navbar navbar-expand-lg navbar-light sticky-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="index.php">
-            <img src=<?php echo dirname(__DIR__) .
-                "/assets/img/logo.png"; ?> alt="Logo AI Lab" class="navbar-logo">
+            <img src=<?php echo "../assets/img/logo.png"; ?> alt="Logo AI Lab" class="navbar-logo">
             <span class="navbar-logo-text">AI Lab Polinema</span>
         </a>
 

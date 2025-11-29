@@ -75,8 +75,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $stmt = $pdo->query("SELECT * FROM sosmed");
 $social_media = $stmt->fetchAll();
 
-include __DIR__ . "/includes/header.php";
-include __DIR__ . "/includes/navbar.php";
+include dirname(__DIR__) . "/includes/header.php";
+include dirname(__DIR__) . "/includes/navbar.php";
 ?>
 
 <!-- Page Header -->

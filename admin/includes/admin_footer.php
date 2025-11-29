@@ -19,7 +19,7 @@
 
 
 <!-- Custom js -->
-<script src=<?php echo dirname(__DIR__) . "/assets/js/main.js"; ?></script>
+<script src="../assets/js/main.js"></script>
 
 <script>
     // Sidebar Toggle for Mobile

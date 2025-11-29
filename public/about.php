@@ -207,8 +207,7 @@ include dirname(__DIR__) . "/includes/navbar.php";
                         <div class="card-body p-4">
                             <div class="mb-3">
                                 <?php if (!empty($a["path_gambar"])): ?>
-                                <img src=<?php echo dirname(__DIR__) .
-                                    "/assets/img/" .
+                                <img src=<?php echo "../assets/img/" .
                                     htmlspecialchars(
                                         $a["path_gambar"],
                                     ); ?>" alt="<?php echo htmlspecialchars(
@@ -252,8 +251,7 @@ include dirname(__DIR__) . "/includes/navbar.php";
                         <div class="card-body p-4">
                             <div class="mb-3">
                                 <?php if (!empty($a["path_gambar"])): ?>
-                                <img src=<?php echo dirname(__DIR__) .
-                                    "/assets/img/" .
+                                <img src=<?php echo "../assets/img/" .
                                     htmlspecialchars(
                                         $a["path_gambar"],
                                     ); ?>" alt="<?php echo htmlspecialchars(

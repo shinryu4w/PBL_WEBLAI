@@ -225,8 +225,7 @@ if (isset($_SESSION["flash_error"])) {
 
                     <?php if ($edit_data && $edit_data["logo"]): ?>
                         <div class="mt-2 p-3 bg-light text-center rounded">
-                            <img src=<?php echo dirname(__DIR__) .
-                                "/assets/img/" .
+                            <img src=<?php echo "../assets/img/" .
                                 htmlspecialchars($edit_data["logo"]); ?>"
                                 id="preview"
                                 class="img-thumbnail"
@@ -302,10 +301,7 @@ if (isset($_SESSION["flash_error"])) {
                                     <td><?php echo $index + 1; ?></td>
                                     <td>
                                         <?php if ($partner["logo"]): ?>
-                                            <img src=<?php echo dirname(
-                                                __DIR__,
-                                            ) .
-                                                "/assets/img/" .
+                                            <img src=<?php echo "../assets/img/" .
                                                 htmlspecialchars(
                                                     $partner["logo"],
                                                 ); ?>"
