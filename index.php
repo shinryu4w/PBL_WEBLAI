@@ -1,19 +1,41 @@
 <?php
-/**
- * Root index.php
- *
- * This file forwards all requests to public/index.php
- */
+$requestUri = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 
-// Path ke public/index.php relatif terhadap file ini
-$publicIndex = __DIR__ . '/public/index.php';
-
-// Pastikan file target ada
-if (!file_exists($publicIndex)) {
-    http_response_code(500);
-    echo 'Error: File public/index.php tidak ditemukan.';
-    exit;
+if ($requestUri !== "/" && substr($requestUri, -1) === "/") {
+    $requestUri = rtrim($requestUri, "/");
 }
 
-// Forward eksekusi ke public/index.php
-require $publicIndex;
+$publicDir = __DIR__ . "/public";
+$targetFile = "$publicDir/index.php";
+
+switch ($requestUri) {
+    case "/":
+    case "":
+        $targetFile = "$publicDir/index.php";
+        break;
+    case "/about.php":
+    case "/about":
+        $targetFile = "$publicDir/about.php";
+        break;
+    case "/contact.php":
+    case "/contact":
+        $targetFile = "$publicDir/contact.php";
+        break;
+    default:
+        $possible = $publicDir . $requestUri;
+        if (is_file($possible)) {
+            $targetFile = $possible;
+        } else {
+            http_response_code(404);
+            echo "404 Not Found";
+            exit();
+        }
+}
+
+if (!file_exists($targetFile)) {
+    http_response_code(500);
+    echo "File target tidak ditemukan: " . htmlspecialchars($targetFile);
+    exit();
+}
+
+require $targetFile;
