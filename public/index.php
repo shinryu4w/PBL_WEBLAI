@@ -11,8 +11,7 @@ $dashboard_bg = $stmt_bg->fetch();
 $bg_image = "";
 if ($dashboard_bg && $dashboard_bg["path_gambar"]) {
     $bg_image =
-        dirname(__DIR__) .
-        "/assets/img/dashboard/" .
+        "../assets/img/dashboard/" .
         htmlspecialchars($dashboard_bg["path_gambar"]);
 }
 
